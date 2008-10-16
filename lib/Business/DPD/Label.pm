@@ -11,7 +11,7 @@ use Carp;
 __PACKAGE__->mk_accessors(qw(zip country depot serial service_code));
 
 # calculated values
-__PACKAGE__->mk_accessors(qw(_fields_calculated tracking_number checksum_tracking_number o_sort d_sort d_depot target_country_code route_code));
+__PACKAGE__->mk_accessors(qw(_fields_calculated tracking_number checksum_tracking_number tracking_number_without_checksum o_sort d_sort d_depot target_country_code route_code barcode checksum_barcode barcode_without_checksum));
 
 # internal
 __PACKAGE__->mk_accessors(qw(_dpd));
@@ -29,7 +29,7 @@ Business::DPD::Label - one DPD label
         zip             => '12555',
         country         => 'DE',
         depot           => '1090',
-        serial          => '5012345678',
+        serial          => '50123456%0878',
         service_code    => '101',    
     });
     $label->calc_fields;
@@ -98,6 +98,7 @@ sub calc_fields {
     $self->calc_tracking_number;
     $self->calc_routing;
     $self->calc_target_country_code;
+    $self->calc_barcode;
     $self->_fields_calculated(1);
 }
 
@@ -114,7 +115,7 @@ Calulates the tracking number and stores it in C<tracking_number>. C<tracking_nu
       | +----------> first two positions of serial  50
       +------------> depot                          1090
 
-The checksum is also stored on it's on in C<checksum_tracking_number>
+We additionally store the checksum in C<checksum_tracking_number> and the C<tracking_number_without_checksum>
 
 =cut
 
@@ -125,6 +126,7 @@ sub calc_tracking_number {
     my $checksum = $self->_dpd->iso7064_mod37_36_checksum($base);
     $self->checksum_tracking_number($checksum);
     $self->tracking_number($base . $checksum);
+    $self->tracking_number_without_checksum($base);
 }
     
 =head3 calc_routing
@@ -163,12 +165,49 @@ sub calc_routing {
 
 }
 
+=head3 calc_target_country_code
+
+    $label->calc_target_country_code;
+
+Store the numeric country code from the alpha2 target country (i.e.: 'DE' -> 276)
+into C<target_country_code>
+
+=cut
+
 sub calc_target_country_code {
     my $self = shift;
     my $schema = $self->_dpd->schema;
     
     my $c = $schema->resultset('Country')->search({ alpha2 => $self->country })->first; 
     $self->target_country_code($c->num);
+}
+
+=head3 calc_barcode
+
+    $label->calc_barcode;
+
+Generate the cleartext barcode and store it in C<barcode>, C<checksum_barcode> and C<barcode_without_checksum>.
+
+    PPPPPPPTTTTTTTTTTTTTTSSSCCCP
+       |          |       |  | |
+       |          |       |  | +-> iso7064_mod37_36_checksum         Z
+       |          |       |  +---> target_country_code               276
+       |          |       +------> service_code                      101
+       |          +--------------> tracking_number_without_checksum  01905002345615
+       +-------------------------> zip (zero padded)                 0012555
+
+
+=cut
+
+sub calc_barcode {
+    my $self = shift;
+
+    my $cleartext = sprintf("%07d",$self->zip) .  $self->tracking_number_without_checksum . $self->service_code . $self->target_country_code;
+    my $checksum = $self->_dpd->iso7064_mod37_36_checksum($cleartext);
+
+    $self->barcode($cleartext.$checksum);
+    $self->checksum_barcode($checksum);
+    $self->barcode_without_checksum($cleartext);
 }
 
 =head1 TODO
@@ -180,11 +219,6 @@ Servicetext
 Servicecode
 
 Lableursprung( datum/zeit, routenDB version, software)
-
-=head3 Barcodefeld
-
-input: target zip, tracking number, servicecode, target country number
-output: barcode-number incl checksum, barcode image
 
 =head3 Sendungsinformationsfeld
 
