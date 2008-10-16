@@ -14,8 +14,10 @@ my $builder = Module::Build->new(
     requires => {
         'perl'             => '5.010',
     },
-    #add_to_cleanup     => ['DBIx-SchemaChecksum-*'],
+    
+    add_to_cleanup     => ['Business-DPD-*'],
     create_makefile_pl => 'passthrough',
+    recursive_test_files => 1,
 );
-
+$builder->add_build_element('sqlite');
 $builder->create_build_script();
