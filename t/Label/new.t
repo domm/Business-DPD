@@ -7,7 +7,7 @@ use Test::NoWarnings;
 
 use Business::DPD::Label;
 
-my $label = Business::DPD::Label->new({
+my $label = Business::DPD::Label->new(undef,{
     zip             => '12555',
     country         => 'DE',
     depot           => '1090',
