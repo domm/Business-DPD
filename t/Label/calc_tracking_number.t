@@ -2,7 +2,7 @@ use 5.010;
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More tests => 3;
 use Test::NoWarnings;
 
 use Business::DPD;
@@ -19,5 +19,6 @@ my $label = Business::DPD::Label->new($dpd,{
 
 $label->calc_tracking_number;
 
+is($label->checksum_tracking_number,'Y','checksum tracking number');
 is($label->tracking_number,'01905002345615Y','tracking number');
 

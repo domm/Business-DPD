@@ -11,7 +11,7 @@ use Carp;
 __PACKAGE__->mk_accessors(qw(zip country depot serial service_code));
 
 # calculated values
-__PACKAGE__->mk_accessors(qw(_fields_calculated tracking_number o_sort d_sort d_depot target_country route_code));
+__PACKAGE__->mk_accessors(qw(_fields_calculated tracking_number checksum_tracking_number o_sort d_sort d_depot target_country route_code));
 
 # internal
 __PACKAGE__->mk_accessors(qw(_dpd));
@@ -113,6 +113,7 @@ Calulates the tracking number and stores it in C<tracking_number>. C<tracking_nu
       | +----------> first two positions of serial  50
       +------------> depot                          1090
 
+The checksum is also stored on it's on in C<checksum_tracking_number>
 
 =cut
 
@@ -121,6 +122,7 @@ sub calc_tracking_number {
 
     my $base = $self->depot . $self->serial;
     my $checksum = $self->_dpd->iso7064_mod37_36_checksum($base);
+    $self->checksum_tracking_number($checksum);
     $self->tracking_number($base . $checksum);
 }
     
