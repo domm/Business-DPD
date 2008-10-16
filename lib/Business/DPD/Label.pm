@@ -11,7 +11,7 @@ use Carp;
 __PACKAGE__->mk_accessors(qw(zip country depot serial service_code));
 
 # calculated values
-__PACKAGE__->mk_accessors(qw(_fields_calculated tracking_number checksum_tracking_number o_sort d_sort d_depot target_country route_code));
+__PACKAGE__->mk_accessors(qw(_fields_calculated tracking_number checksum_tracking_number o_sort d_sort d_depot target_country_code route_code));
 
 # internal
 __PACKAGE__->mk_accessors(qw(_dpd));
@@ -86,9 +86,9 @@ sub new {
 
     $label->calc_fields;
 
-Calculate the following fields from the provided data using the DPD database from C<$schema>:
+Calculate all caluclatable fields from the provided data using the DPD database from C<$schema>:
 
-  tracking_number o_sort d_sort target_depot target_country route_code
+  target_country
 
 =cut
 
@@ -97,6 +97,7 @@ sub calc_fields {
 
     $self->calc_tracking_number;
     $self->calc_routing;
+    $self->calc_target_country_code;
     $self->_fields_calculated(1);
 }
 
@@ -126,17 +127,28 @@ sub calc_tracking_number {
     $self->tracking_number($base . $checksum);
 }
     
+=head3 calc_routing
+
+    $label->calc_routing;
+    $label->o_sort
+
+Calculates the following fields:
+
+  o_sort d_sort d_depot
+  
+TODO: calc route_code ("Beförderungsweg")
+
+=cut
 
 sub calc_routing {
     my $self = shift;
     my $schema = $self->_dpd->schema;
 
-    my $route_rs = $schema->resultset('Routes')->search({
+    my $route_rs = $schema->resultset('Route')->search({
         dest_country=>$self->country,
         begin_postcode => { '<=' => $self->zip },
-        end_post_code => { '>=' => $self->zip },
+        end_postcode => { '>=' => $self->zip },
     });
-
 
     croak "No route found!" if $route_rs->count == 0;
     croak "More than one route found, something's fishy!" unless $route_rs->count == 1;
@@ -147,11 +159,16 @@ sub calc_routing {
     $self->d_sort($route->d_sort);
     $self->d_depot($route->d_depot);
     
-    # TODO: beförderungsweg
+    # TODO: route_code = beförderungsweg
 
-    #target_country
-    #route_code
+}
 
+sub calc_target_country_code {
+    my $self = shift;
+    my $schema = $self->_dpd->schema;
+    
+    my $c = $schema->resultset('Country')->search({ alpha2 => $self->country })->first; 
+    $self->target_country_code($c->num);
 }
 
 =head1 TODO

@@ -107,7 +107,7 @@ sub _import_country {
 sub _import_routes {
     my ( $class, $dir, $schema ) = @_;
     
-   croak "There is already data stored in table 'routes'" if $schema->resultset('Routes')->search->count;
+   croak "There is already data stored in table 'routes'" if $schema->resultset('Route')->search->count;
 
     my @routes;
     $class->_import_file(
@@ -119,14 +119,14 @@ sub _import_routes {
             my %to_create;
             my @data = @$data;
             @to_create{
-                qw(dest_country begin_postcode end_post_code service_code routing_places sending_date o_sort d_depot grouping_priority d_sort barcode_id)
+                qw(dest_country begin_postcode end_postcode service_code routing_places sending_date o_sort d_depot grouping_priority d_sort barcode_id)
                 } = @data[ 0 .. 10 ];
 
             push(@routes,\%to_create);
         }
     );
 
-    $schema->resultset('Routes')->populate( \@routes );
+    $schema->resultset('Route')->populate( \@routes );
 
 }
 
@@ -184,11 +184,11 @@ CREATE TABLE country (
 " );
 
     $dbh->do( "
-CREATE TABLE routes (
+CREATE TABLE route (
     id integer PRIMARY KEY AUTOINCREMENT,
     dest_country text,
     begin_postcode text,
-    end_post_code text,
+    end_postcode text,
     service_code text,
     routing_places text,
     sending_date text,
