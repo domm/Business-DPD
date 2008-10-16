@@ -11,7 +11,7 @@ use Carp;
 __PACKAGE__->mk_accessors(qw(zip country depot serial service_code));
 
 # calculated values
-__PACKAGE__->mk_accessors(qw(_fields_calculated tracking_number o_sort d_sort target_depot target_country route_code));
+__PACKAGE__->mk_accessors(qw(_fields_calculated tracking_number o_sort d_sort d_depot target_country route_code));
 
 # internal
 __PACKAGE__->mk_accessors(qw(_dpd));
@@ -126,22 +126,33 @@ sub calc_tracking_number {
     
 
 sub calc_routing {
-    my ( $self, $schema ) = @_;
+    my $self = shift;
+    my $schema = $self->_dpd->schema;
+
+    my $route_rs = $schema->resultset('Routes')->search({
+        dest_country=>$self->country,
+        begin_postcode => { '<=' => $self->zip },
+        end_post_code => { '>=' => $self->zip },
+    });
+
+
+    croak "No route found!" if $route_rs->count == 0;
+    croak "More than one route found, something's fishy!" unless $route_rs->count == 1;
+    
+    my $route=$route_rs->first;
+
+    $self->o_sort($route->o_sort);
+    $self->d_sort($route->d_sort);
+    $self->d_depot($route->d_depot);
+    
+    # TODO: beförderungsweg
+
+    #target_country
+    #route_code
+
 }
 
 =head1 TODO
-
-=head3 Routenfeld
-
-* tracking number:
-
-input: depot number (plus 5+6 stelle?), laufende nummer
-output: tracking number incl checksum
-
-* routing:
-
-input: target zip, Land,
-output: O-Sort, Land, Empfangsdepot, Beförderungsweg, D-Sort
 
 * weiters:
 
