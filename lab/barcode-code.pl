@@ -1,0 +1,25 @@
+
+use Barcode::Code128 qw(FNC1);
+
+# Create a PNG file 
+use strict;
+my $code = new Barcode::Code128;
+
+open(PNG, ">code128_1.png") or die "Can't write code128.png: $!\n";
+binmode(PNG);
+print PNG $code->png(chr(0xf5)."%007110601782".'532948375101276');
+close(PNG);
+
+__END__
+
+HE01/%007110601782532948375101276
+HE01/%007110601782532948375101276
+
+HE01/%001255501905002345614101276
+
+
+HE01/%007110601782532948375101276
+
+
+HE01/%00711060178299532948375101276
+

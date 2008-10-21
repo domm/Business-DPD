@@ -15,12 +15,13 @@ $page->mediabox ("A6");
 #$page->mediabox (105/mm, 148/mm);
 #$page->cropbox  (7.5/mm, 7.5/mm, 97.5/mm, 140.5/mm);
 
-my $code = '001255501905002345615101276';
+#my $code = '001255501905002345615101276';
+my $code = '001255501905002345614101276';
 my $code_checksum = '001255501905002345615101276Z';
 
 my $box = $page->gfx;
 my $bc = $pdf->xo_code128 (
-    -type=>'c',
+    -type=>'b',
  #   -font => $font,    # a PDF $font set with $pdf->corefont
     -code => $code,    # a string we want encoded as a $bc xo form
     -quzn => 0,    # quiet zone, margin between bars and frame 
@@ -36,11 +37,11 @@ my $bc = $pdf->xo_code128 (
   # render $bc to page at x,y at 80%
 $box->formimage($bc,10/mm,5/mm);
 
-my $headline_text = $page->text;
-$headline_text->font( $font, 10/pt );
-$headline_text->fillcolor('black');
-$headline_text->translate( 3/mm, 1/mm );
-$headline_text->text($code_checksum);
+my $barcode_text = $page->text;
+$barcode_text->font( $font, 10/pt );
+$barcode_text->fillcolor('black');
+$barcode_text->translate( 3/mm, 1/mm );
+$barcode_text->text($code_checksum);
 
 
 
