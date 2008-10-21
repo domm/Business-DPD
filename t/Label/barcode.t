@@ -18,10 +18,11 @@ my $label = Business::DPD::Label->new($dpd,{
 });
 
 $label->calc_tracking_number;
+$label->calc_routing;
 $label->calc_target_country_code;
 $label->calc_barcode;
 
-is($label->barcode,'001255501905002345615101276Z','barcode');
-is($label->checksum_barcode,'Z','checksum barcode');
-is($label->barcode_without_checksum,'001255501905002345615101276','barcode without checksum');
+is($label->code,'001255501905002345615101276','code');
+is($label->code_barcode,'%001255501905002345615101276','code barcode');
+is($label->code_human,'001255501905002345615101276Z','code human readable');
 

@@ -11,7 +11,7 @@ use Carp;
 __PACKAGE__->mk_accessors(qw(zip country depot serial service_code));
 
 # calculated values
-__PACKAGE__->mk_accessors(qw(_fields_calculated tracking_number checksum_tracking_number tracking_number_without_checksum o_sort d_sort d_depot target_country_code route_code barcode checksum_barcode barcode_without_checksum));
+__PACKAGE__->mk_accessors(qw(_fields_calculated tracking_number checksum_tracking_number tracking_number_without_checksum o_sort d_sort d_depot target_country_code route_code code code_human code_barcode barcode_id));
 
 # internal
 __PACKAGE__->mk_accessors(qw(_dpd));
@@ -136,7 +136,7 @@ sub calc_tracking_number {
 
 Calculates the following fields:
 
-  o_sort d_sort d_depot
+  o_sort d_sort d_depot barcode_id
   
 TODO: calc route_code ("Beförderungsweg")
 
@@ -160,7 +160,8 @@ sub calc_routing {
     $self->o_sort($route->o_sort);
     $self->d_sort($route->d_sort);
     $self->d_depot($route->d_depot);
-    
+    $self->barcode_id($route->barcode_id);
+
     # TODO: route_code = beförderungsweg
 
 }
@@ -186,16 +187,34 @@ sub calc_target_country_code {
 
     $label->calc_barcode;
 
-Generate the cleartext barcode and store it in C<barcode>, C<checksum_barcode> and C<barcode_without_checksum>.
+Generate the various parts of the barcode, which are:
 
-    PPPPPPPTTTTTTTTTTTTTTSSSCCCP
-       |          |       |  | |
-       |          |       |  | +-> iso7064_mod37_36_checksum         Z
-       |          |       |  +---> target_country_code               276
-       |          |       +------> service_code                      101
-       |          +--------------> tracking_number_without_checksum  01905002345615
-       +-------------------------> zip (zero padded)                 0012555
+=over
 
+=item * code 
+
+PPPPPPPTTTTTTTTTTTTTTSSSCCC
+
+=item * code_human
+
+PPPPPPPTTTTTTTTTTTTTTSSSCCCP
+
+=item * code_barcode
+
+IPPPPPPPTTTTTTTTTTTTTTSSSCCC
+
+=back
+
+And here's the explanation of those strange letter:
+
+    IPPPPPPPTTTTTTTTTTTTTTSSSCCCP
+    |   |          |       |  | |
+    |   |          |       |  | +-> iso7064_mod37_36_checksum         Z
+    |   |          |       |  +---> target_country_code               276
+    |   |          |       +------> service_code                      101
+    |   |          +--------------> tracking_number_without_checksum  01905002345615
+    |   +-------------------------> zip (zero padded)                 0012555
+    +-----------------------------> barcode_id                        %                   
 
 =cut
 
@@ -205,9 +224,9 @@ sub calc_barcode {
     my $cleartext = sprintf("%07d",$self->zip) .  $self->tracking_number_without_checksum . $self->service_code . $self->target_country_code;
     my $checksum = $self->_dpd->iso7064_mod37_36_checksum($cleartext);
 
-    $self->barcode($cleartext.$checksum);
-    $self->checksum_barcode($checksum);
-    $self->barcode_without_checksum($cleartext);
+    $self->code($cleartext);
+    $self->code_human($cleartext . $checksum);
+    $self->code_barcode(chr($self->barcode_id) . $cleartext);
 }
 
 =head1 TODO
@@ -245,6 +264,7 @@ input: adressdaten
 ** template
 
 =cut
+
 
 1;
 
