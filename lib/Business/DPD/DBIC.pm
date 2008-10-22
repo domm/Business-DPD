@@ -59,6 +59,7 @@ sub import_data {
 
     $class->_import_country( $opts->{source}, $schema );
     $class->_import_routes( $opts->{source}, $schema );
+    $class->_import_depot( $opts->{source}, $schema );
 
 }
 
@@ -127,6 +128,32 @@ sub _import_routes {
     );
 
     $schema->resultset('Route')->populate( \@routes );
+
+}
+
+sub _import_depot {
+    my ( $class, $dir, $schema ) = @_;
+    
+   croak "There is already data stored in table 'depot'" if $schema->resultset('Depot')->search->count;
+
+    my @routes;
+    $class->_import_file(
+        $schema, $dir, 'DEPOTS',
+        sub {
+            my ( $schema, $data ) = @_;
+
+            # slicing for fun & profit!
+            my %to_create;
+            my @data = @$data;
+            @to_create{
+                qw( depot_number IATALikeCode group_id name1 name2 address1 address2 postcode city country phone fax mail web)
+                } = @data[ 0 .. 10 ];
+
+            push(@routes,\%to_create);
+        }
+    );
+
+    $schema->resultset('Depot')->populate( \@routes );
 
 }
 
