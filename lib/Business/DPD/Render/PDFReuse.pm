@@ -117,7 +117,7 @@ sub render {
 
     # depot info
     my $depot
-        = $self->_dpd->schema->resultset('Depot')->find( $label->depot );
+        = $self->_dpd->schema->resultset('DpdDepot')->find( $label->depot );
     my @dep = (
         $depot->name1, $depot->name2, $depot->address1, $depot->address2,
         $depot->country . '-' . $depot->postcode . ' ' . $depot->city

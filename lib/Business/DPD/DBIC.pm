@@ -56,7 +56,7 @@ sub import_data {
     croak $@ if $@;
 
     my $schema = $opts->{schema}->connect( @{ $opts->{connect} } );
-
+    $class->_import_meta( $opts->{source}, $schema );
     $class->_import_country( $opts->{source}, $schema );
     $class->_import_routes( $opts->{source}, $schema );
     $class->_import_depot( $opts->{source}, $schema );
@@ -83,7 +83,7 @@ sub _import_country {
     my ( $class, $dir, $schema ) = @_;
 
     croak "There is already data stored in table 'country'"
-        if $schema->resultset('Country')->search->count;
+        if $schema->resultset('DpdCountry')->search->count;
 
     my @country;
     $class->_import_file(
@@ -103,7 +103,7 @@ sub _import_country {
         }
     );
 
-    $schema->resultset('Country')->populate( \@country );
+    $schema->resultset('DpdCountry')->populate( \@country );
 
 }
 
@@ -111,7 +111,7 @@ sub _import_routes {
     my ( $class, $dir, $schema ) = @_;
 
     croak "There is already data stored in table 'routes'"
-        if $schema->resultset('Route')->search->count;
+        if $schema->resultset('DpdRoute')->search->count;
 
     my @routes;
     $class->_import_file(
@@ -130,7 +130,7 @@ sub _import_routes {
         }
     );
 
-    $schema->resultset('Route')->populate( \@routes );
+    $schema->resultset('DpdRoute')->populate( \@routes );
 
 }
 
@@ -138,7 +138,7 @@ sub _import_depot {
     my ( $class, $dir, $schema ) = @_;
 
     croak "There is already data stored in table 'depot'"
-        if $schema->resultset('Depot')->search->count;
+        if $schema->resultset('DpdDepot')->search->count;
 
     my @routes;
     $class->_import_file(
@@ -157,10 +157,33 @@ sub _import_depot {
         }
     );
 
-    $schema->resultset('Depot')->populate( \@routes );
+    $schema->resultset('DpdDepot')->populate( \@routes );
 
 }
 
+sub _import_meta {
+    my ( $class, $dir, $schema ) = @_;
+
+    my $dbfile = catfile( $dir, 'COUNTRY' );
+    open( my $fh, "<", $dbfile )
+        || croak "Cannot read from COUNTRY = $dbfile: $!";
+    
+    my %data;
+    foreach my $line (<$fh>) {
+        last unless $line =~/^#/;
+        chomp($line);
+        $line=~/^#(.*?): ([\w\d:\/\.]+)/;
+        $data{lc($1)}=$2;
+    }
+    close($fh);
+    
+    $schema->resultset('DpdMeta')->create({
+        version=>$data{version},
+        expires=>$data{expiration},
+        reference=>$data{reference},
+    });
+
+}
 =head3 path_to_sqlite
 
   my $sqlite_file = Business::DPD::DBIC->path_to_sqlite;

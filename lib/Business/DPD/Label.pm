@@ -150,7 +150,7 @@ sub calc_routing {
     my $self = shift;
     my $schema = $self->_dpd->schema;
 
-    my $route_rs = $schema->resultset('Route')->search({
+    my $route_rs = $schema->resultset('DpdRoute')->search({
         dest_country=>$self->country,
         begin_postcode => { '<=' => $self->zip },
         end_postcode => { '>=' => $self->zip },
@@ -183,7 +183,7 @@ sub calc_target_country_code {
     my $self = shift;
     my $schema = $self->_dpd->schema;
     
-    my $c = $schema->resultset('Country')->search({ alpha2 => $self->country })->first; 
+    my $c = $schema->resultset('DpdCountry')->search({ alpha2 => $self->country })->first; 
     $self->target_country_code($c->num);
 }
 
