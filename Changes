@@ -1,4 +1,8 @@
 Revision history for Perl extension Business::DPD
 
+0.10   2008-10-22 22:32:11
+    - first proper (local) release
+
+
 0.01    Tue Oct 14 15:44:13 2008
-        - original version
+    - original version
