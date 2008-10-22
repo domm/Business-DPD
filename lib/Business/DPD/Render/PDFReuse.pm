@@ -8,6 +8,8 @@ use parent qw(Business::DPD::Render);
 use Carp;
 use PDF::Reuse;
 use PDF::Reuse::Barcode;
+use Encode;
+use DateTime;
 
 __PACKAGE__->mk_accessors(qw(template));
 
@@ -40,7 +42,6 @@ sub render {
     my $code_hr = $label->code_human;
 
     die unless $self->template;
-    say $self->template;
 
     prFile( $code_hr . '.pdf' );
     prMbox( 0, 0, 257, 420 );
@@ -78,7 +79,8 @@ sub render {
 
     # Label-Ursprug
     prFontSize(4);
-    prText( 126, 89, "TODO!! 2008-10-21 16:16; ROUTEVER; Business-DPD-0.01",
+    my $now = DateTime->now;
+    prText( 126, 89, $now->strftime('%F %H:%M')."; ROUTEVER; Business-DPD-".Business::DPD->VERSION,
         'center' );
 
     # Servicecode-Land-EmpfaengerPLZ
@@ -111,12 +113,73 @@ sub render {
     #my $depot = $self->_dpd->schema->resultset('Depot')
     prFontSize(12);
     prText( 230, 390, "TODO DEPOT INFO",'',270 );
-    prText( 200, 390, "TODO ABSENDER INFO",'',270 );
-    prText( 20, 380, "TODO RECEIVER INFO", );
+    
+    # originator{
+    $self->_multiline(
+        $self->originator,
+        {
+            fontsize => 4,
+            base_x => 215,
+            base_y => 385,
+            rotate => '270',
+        }
+    );
+    
+    
+    # recipient
+    $self->_multiline(
+        [@{$label->recipient},$label->country.'-'.$label->zip.' '.$label->city],
+        {
+            fontsize => 8,
+            base_x => 10,
+            base_y => 386,
+        }
+    );
 
+    # weight
+    prFontSize(11);
+    prText( 155, 272, $label->weight, 'center');
+    
+    # lieferung n / x
+    my $count;
+    if ($label->shipment_count_this && $label->shipment_count_total) {
+        $count = $label->shipment_count_this .'/'. $label->shipment_count_total;
+    }
+    else {
+        $count = '1/1';
+    }
+    prText( 155, 295, $count, 'center');
+
+    # referenznr
+    prFontSize(8);
+    prText( 37, 308, $label->reference_number );
+
+    # auftragsnr
+    prText( 37, 283, $label->order_number );
+    
     prEnd();
 
 }
+
+sub _multiline {
+    my ($self,$data,$opts) = @_;
+    
+    prFontSize($opts->{fontsize});
+    my $base_x=$opts->{base_x};
+    my $base_y=$opts->{base_y};
+    my $rotate = $opts->{rotate} || 0;
+
+    foreach my $line (@$data) {
+        prText( $base_x, $base_y, encode('latin1',decode('utf8',$line)),$opts->{'align'} || '',$rotate );
+        if ($rotate == 270) {
+            $base_x -= ($opts->{fontsize}+1);
+        } elsif ($rotate == 0) {
+            $base_y -= ($opts->{fontsize}+1);
+        }
+    }
+
+}
+
 
 1;
 
