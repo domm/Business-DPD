@@ -20,4 +20,6 @@ my $builder = Module::Build->new(
     recursive_test_files => 1,
 );
 $builder->add_build_element('sqlite');
+$builder->add_build_element('pdf');
+$builder->add_build_element('TTF');
 $builder->create_build_script();
