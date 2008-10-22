@@ -1,4 +1,4 @@
-package Business::DPD::DBIC::Schema::Route;
+package Business::DPD::DBIC::Schema::Depot;
 
 use strict;
 use warnings;
@@ -6,43 +6,42 @@ use warnings;
 use base qw(DBIx::Class);
 
 __PACKAGE__->load_components("Core");
-__PACKAGE__->table("route");
+__PACKAGE__->table("depot");
 __PACKAGE__->add_columns(
-  "id",
-  {
-    data_type => "integer",
-    is_auto_increment => 1,
-    is_nullable => 0,
-    size => undef,
-  },
-  "dest_country",
+  "depot_number",
+  { data_type => "integer", is_nullable => 0, size => undef },
+  "iatalikecode",
   { data_type => "text", is_nullable => 0, size => undef },
-  "begin_postcode",
+  "group_id",
   { data_type => "text", is_nullable => 0, size => undef },
-  "end_postcode",
+  "name1",
   { data_type => "text", is_nullable => 0, size => undef },
-  "service_code",
+  "name2",
   { data_type => "text", is_nullable => 0, size => undef },
-  "routing_places",
+  "address1",
   { data_type => "text", is_nullable => 0, size => undef },
-  "sending_date",
+  "address2",
   { data_type => "text", is_nullable => 0, size => undef },
-  "o_sort",
+  "postcode",
   { data_type => "text", is_nullable => 0, size => undef },
-  "d_depot",
+  "city",
   { data_type => "text", is_nullable => 0, size => undef },
-  "grouping_priority",
+  "country",
   { data_type => "text", is_nullable => 0, size => undef },
-  "d_sort",
+  "phone",
   { data_type => "text", is_nullable => 0, size => undef },
-  "barcode_id",
+  "fax",
+  { data_type => "text", is_nullable => 0, size => undef },
+  "mail",
+  { data_type => "text", is_nullable => 0, size => undef },
+  "web",
   { data_type => "text", is_nullable => 0, size => undef },
 );
-__PACKAGE__->set_primary_key("id");
+__PACKAGE__->set_primary_key("depot_number");
 
 
 # Created by DBIx::Class::Schema::Loader v0.04999_05 @ 2008-10-22 10:32:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:NHE8c6l9rjIrMpVJMNkCLQ
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:GeuDxK52WT4fRQ7yZqAraw
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

@@ -199,6 +199,26 @@ CREATE TABLE route (
     barcode_id text
 )
 " );
+    
+    $dbh->do( "
+CREATE TABLE depot (
+    depot_number integer PRIMARY KEY,
+    IATALikeCode text,
+    group_id text,
+    name1 text,
+    name2 text,
+    address1 text,
+    address2 text,
+    postcode text,
+    city text,
+    country text,
+    phone text,
+    fax text,
+    mail text,
+    web text
+)
+" );
+
 
 }
 
