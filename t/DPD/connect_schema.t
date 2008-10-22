@@ -15,5 +15,5 @@ my $schema = $dpd->schema;
 isa_ok($schema,'DBIx::Class');
 can_ok($schema,'resultset');
 
-ok($schema->resultset('Country')->search->count,'can search & count on resultset');
+ok($schema->resultset('DpdCountry')->search->count,'can search & count on resultset');
 

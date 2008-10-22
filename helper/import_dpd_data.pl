@@ -9,7 +9,7 @@ use Business::DPD::DBIC;
 my $sourcedir = $ARGV[0] || 'data';
 die "sourcedir missing or does not exist!" unless -d $sourcedir;
 
-Business::DPD::DBIC->import_data({source=>$sourcedir});
+Business::DPD::DBIC->import_data_into_sqlite({source=>$sourcedir});
 
 __END__
 

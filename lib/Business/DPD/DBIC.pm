@@ -27,9 +27,9 @@ A DBIx::Class based interface to various data sources needed to generate DPD lab
 
 =cut
 
-=head3 import_data
+=head3 import_data_into_sqlite
 
-    Business::DPD::DBIC->path_to_sqlite({
+    Business::DPD::DBIC->import_data_into_sqlite({
         schema   => 'Business::DPD::DBIC::Schema',
         source   => '/path/to/data',
         connect  => [ DBI connect info ]
@@ -41,7 +41,7 @@ DB)
 
 =cut
 
-sub import_data {
+sub import_data_into_sqlite {
     my ( $class, $opts ) = @_;
 
     croak "required parameter 'source' missing" unless $opts->{source};
@@ -56,11 +56,28 @@ sub import_data {
     croak $@ if $@;
 
     my $schema = $opts->{schema}->connect( @{ $opts->{connect} } );
+    
+    $class->import_data($schema, $opts);
+}
+
+=head3 import_data
+
+    Business::DPD::DBIC->import_data( $schema ,
+    {
+        source  => '/path/to/data',
+    });
+
+Import the plain text data into the <$schema>. Usefull if you want to 
+embed the DB into your own database.
+
+=cut
+
+sub import_data {
+    my ($class, $schema, $opts) = @_;
     $class->_import_meta( $opts->{source}, $schema );
     $class->_import_country( $opts->{source}, $schema );
     $class->_import_routes( $opts->{source}, $schema );
     $class->_import_depot( $opts->{source}, $schema );
-
 }
 
 sub _import_file {
@@ -184,6 +201,7 @@ sub _import_meta {
     });
 
 }
+
 =head3 path_to_sqlite
 
   my $sqlite_file = Business::DPD::DBIC->path_to_sqlite;
@@ -224,6 +242,16 @@ sub generate_sqlite {
         $dbh->do($create);
     }
 }
+
+=head3 create_table_statements
+
+    my $list_of_create_statements = Business::DPD::DBIC->create_table_statements;
+
+Returns an ARRAYREF consisting of plain text sql statements to create 
+the database. If you want to embed the DB, you might want to munge the 
+values to fit your database.
+
+=cut
 
 sub create_table_statements {
     return [
