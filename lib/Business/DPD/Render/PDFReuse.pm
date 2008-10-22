@@ -6,21 +6,18 @@ use 5.010;
 
 use parent qw(Business::DPD::Render);
 use Carp;
-use PDF::Reuse;
-use PDF::Reuse::Barcode;
 use Encode;
-use DateTime;
 
 __PACKAGE__->mk_accessors(qw(template));
 
 =head1 NAME
 
-Business::DPD::Render - render a lable
+Business::DPD::Render::PDFReuse::SlimA6 - render a lable in slim A6 using PDF::Reuse
 
 =head1 SYNOPSIS
 
-    use Business::DPD::Render::SomeSubclass;
-    my $renderer = Business::DPD::Render::SomeSubclass->new( $dpd, {
+    use Business::DPD::Render::PDFReuse::SlimA6;
+    my $renderer = Business::DPD::Render::PDFReuse::SlimA6->new( $dpd, {
         outdir => '/path/to/output/dir/',    
         originator => ['some','lines','of text'],
     });
@@ -28,7 +25,10 @@ Business::DPD::Render - render a lable
 
 =head1 DESCRIPTION
 
-You should really use a subclass of this module!
+Render a DPD lable using a slim A6-based template that also fits on a 
+A4-divided-by-three-page. This is what we need at the moment. If you 
+want to provide other formats, please go ahead and either release them 
+as a standalone dist on CPAN or contact me to include your design.
 
 =head1 METHODS
 
@@ -36,157 +36,37 @@ You should really use a subclass of this module!
 
 =cut
 
-sub render {
-    my ( $self, $label ) = @_;
+=head3 _multiline
 
-    my $code_hr = $label->code_human;
+    $renderer->_multiline(
+        ['some','lines of','text'],
+        {
+            fontsize => 6,
+            base_x   => 35,
+            base_y   => 120,
+            rotate   => 270,   # or 0
+            align    =>
+        },
+    )
 
-    die unless $self->template;
+Render several lines of text using a some very crappy placing 
+"algorithm". Patches welcome!
 
-    prFile( $code_hr . '.pdf' );
-    prMbox( 0, 0, 257, 420 );
-    prForm( {
-            file => $self->template,
-            page => 1,
-            x    => 0,
-            y    => 0
-        }
-    );
+B<Note:> Input is expected to be C<utf8> and will be encoded as 
+C<latin1> until someone can show me how to stuff utf8 into 
+C<PDF::Reuse>.
 
-    PDF::Reuse::Barcode::Code128(
-        mode           => 'graphic',
-        x              => 20,
-        text           => 0,
-        ySize          => 3,
-        xSize          => 0.9,
-        y              => -5,
-        drawBackground => 0,
-        value          => chr(0xf5) . $label->code_barcode
-    );
-
-    prTTFont("MONACO.TTF");
-    # barcode
-    prFontSize(9);
-    prText( 126, 12, $label->code_human, 'center' );
-
-    # tracking number
-    prFontSize(26);
-    prText( 8, 174, $label->depot );
-    prFontSize(20);
-    prText( 72, 174, $label->serial );
-    prFontSize(14);
-    prText( 195, 174, $label->checksum_tracking_number );
-
-    # Label-Ursprug
-    prFontSize(4);
-    my $now = DateTime->now;
-    prText(
-        126,
-        89,
-        $now->strftime('%F %H:%M')
-            . "; ROUTEVER; Business-DPD-"
-            . Business::DPD->VERSION,
-        'center'
-    );
-
-    # Servicecode-Land-EmpfaengerPLZ
-    prFontSize(9);
-    prText( 126, 98,
-        join( '-', $label->service_code, $label->country, $label->zip ),
-        'center' );
-
-    # routing
-    prFontSize(28);
-    prText( 20, 95, $label->o_sort );
-    prText( 237, 95, $label->d_sort, 'right' );
-    if ( $label->route_code ) {
-        prFontSize(34);
-        prText(
-            126,
-            130,
-            $label->country . '-'
-                . $label->d_depot . '-'
-                . $label->route_code,
-            'center'
-        );
-    }
-    else {
-        prFontSize(40);
-        prText( 126, 130, $label->country . '-' . $label->d_depot, 'center' );
-    }
-
-    # depot info
-    my $depot
-        = $self->_dpd->schema->resultset('DpdDepot')->find( $label->depot );
-    my @dep = (
-        $depot->name1, $depot->name2, $depot->address1, $depot->address2,
-        $depot->country . '-' . $depot->postcode . ' ' . $depot->city
-    );
-    push( @dep, 'Tel: ' . $depot->phone ) if $depot->phone;
-    push( @dep, 'Fax: ' . $depot->fax )   if $depot->fax;
-    $self->_multiline(
-        \@dep,
-        {   fontsize => 4,
-            base_x   => 250,
-            base_y   => 390,
-            rotate   => '270',
-        }
-    );
-
-    # originator{
-    $self->_multiline(
-        $self->originator,
-        {   fontsize => 4,
-            base_x   => 215,
-            base_y   => 385,
-            rotate   => '270',
-        }
-    );
-
-    # recipient
-    $self->_multiline( [
-            @{ $label->recipient },
-            $label->country . '-' . $label->zip . ' ' . $label->city
-        ],
-        {   fontsize => 8,
-            base_x   => 10,
-            base_y   => 386,
-        }
-    );
-
-    # weight
-    prFontSize(11);
-    prText( 155, 272, $label->weight, 'center' );
-
-    # lieferung n / x
-    my $count;
-    if ( $label->shipment_count_this && $label->shipment_count_total ) {
-        $count = $label->shipment_count_this . '/'
-            . $label->shipment_count_total;
-    }
-    else {
-        $count = '1/1';
-    }
-    prText( 155, 295, $count, 'center' );
-
-    # referenznr
-    prFontSize(8);
-    prText( 37, 308, $label->reference_number );
-
-    # auftragsnr
-    prText( 37, 283, $label->order_number );
-
-    prEnd();
-
-}
+=cut
 
 sub _multiline {
     my ( $self, $data, $opts ) = @_;
 
-    prFontSize( $opts->{fontsize} );
-    my $base_x = $opts->{base_x};
-    my $base_y = $opts->{base_y};
+    my $fontsize =  $opts->{fontsize} || 6;
+    my $base_x = $opts->{base_x} || 0;
+    my $base_y = $opts->{base_y} || 0;
     my $rotate = $opts->{rotate} || 0;
+    
+    prFontSize( $fontsize );
 
     foreach my $line (@$data) {
         next unless $line =~ /\w/;
@@ -196,13 +76,12 @@ sub _multiline {
             $opts->{'align'} || '', $rotate
         );
         if ( $rotate == 270 ) {
-            $base_x -= ( $opts->{fontsize} + 1 );
+            $base_x -= ( $fontsize + 1 );
         }
         elsif ( $rotate == 0 ) {
-            $base_y -= ( $opts->{fontsize} + 1 );
+            $base_y -= ( $fontsize + 1 );
         }
     }
-
 }
 
 1;
@@ -211,9 +90,12 @@ __END__
 
 =head1 AUTHOR
 
+Thomas Klausner C<<domm {at} cpan.org>>
 RevDev E<lt>we {at} revdev.atE<gt>
 
 =head1 SEE ALSO
+
+PDF::Reuse
 
 =head1 LICENSE
 
