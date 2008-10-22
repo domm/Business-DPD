@@ -75,7 +75,10 @@ sub render {
         value          => chr(0xf5) . $label->code_barcode
     );
 
-    prTTFont("MONACO.TTF");
+    my $font_path = $self->template;
+    $font_path=~s/SlimA6.pdf/MONACO.TTF/;
+    prTTFont($font_path);
+    
     # barcode
     prFontSize(9);
     prText( 126, 12, $label->code_human, 'center' );
