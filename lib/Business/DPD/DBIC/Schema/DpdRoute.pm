@@ -1,4 +1,4 @@
-package Business::DPD::DBIC::Schema::Route;
+package Business::DPD::DBIC::Schema::DpdRoute;
 
 use strict;
 use warnings;
@@ -6,7 +6,7 @@ use warnings;
 use base qw(DBIx::Class);
 
 __PACKAGE__->load_components("Core");
-__PACKAGE__->table("route");
+__PACKAGE__->table("dpd_route");
 __PACKAGE__->add_columns(
   "id",
   {
@@ -41,8 +41,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.04999_05 @ 2008-10-22 10:32:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:NHE8c6l9rjIrMpVJMNkCLQ
+# Created by DBIx::Class::Schema::Loader v0.04999_05 @ 2008-10-22 11:41:15
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:XY0T40ZqADwBeDvUC+NqSw
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

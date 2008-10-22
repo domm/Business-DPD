@@ -1,4 +1,4 @@
-package Business::DPD::DBIC::Schema::Meta;
+package Business::DPD::DBIC::Schema::DpdMeta;
 
 use strict;
 use warnings;
@@ -6,7 +6,7 @@ use warnings;
 use base qw(DBIx::Class);
 
 __PACKAGE__->load_components("Core");
-__PACKAGE__->table("meta");
+__PACKAGE__->table("dpd_meta");
 __PACKAGE__->add_columns(
   "version",
   { data_type => "integer", is_nullable => 0, size => undef },
@@ -18,8 +18,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("version");
 
 
-# Created by DBIx::Class::Schema::Loader v0.04999_05 @ 2008-10-22 10:32:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:pDTQT9U1E6lUSw+E2j62cg
+# Created by DBIx::Class::Schema::Loader v0.04999_05 @ 2008-10-22 11:41:15
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:J8ID7zWwENwmlRk9tMQqzA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

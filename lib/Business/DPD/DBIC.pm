@@ -82,7 +82,8 @@ sub _import_file {
 sub _import_country {
     my ( $class, $dir, $schema ) = @_;
 
-    croak "There is already data stored in table 'country'" if $schema->resultset('Country')->search->count;
+    croak "There is already data stored in table 'country'"
+        if $schema->resultset('Country')->search->count;
 
     my @country;
     $class->_import_file(
@@ -90,8 +91,9 @@ sub _import_country {
         'COUNTRY',
         sub {
             my ( $schema, $data ) = @_;
-            push(@country,{
-                    num       => $data->[0],
+            push(
+                @country,
+                {   num       => $data->[0],
                     alpha2    => $data->[1],
                     alpha3    => $data->[2],
                     languages => $data->[3],
@@ -100,15 +102,16 @@ sub _import_country {
             );
         }
     );
-    
+
     $schema->resultset('Country')->populate( \@country );
 
 }
 
 sub _import_routes {
     my ( $class, $dir, $schema ) = @_;
-    
-   croak "There is already data stored in table 'routes'" if $schema->resultset('Route')->search->count;
+
+    croak "There is already data stored in table 'routes'"
+        if $schema->resultset('Route')->search->count;
 
     my @routes;
     $class->_import_file(
@@ -123,7 +126,7 @@ sub _import_routes {
                 qw(dest_country begin_postcode end_postcode service_code routing_places sending_date o_sort d_depot grouping_priority d_sort barcode_id)
                 } = @data[ 0 .. 10 ];
 
-            push(@routes,\%to_create);
+            push( @routes, \%to_create );
         }
     );
 
@@ -133,8 +136,9 @@ sub _import_routes {
 
 sub _import_depot {
     my ( $class, $dir, $schema ) = @_;
-    
-   croak "There is already data stored in table 'depot'" if $schema->resultset('Depot')->search->count;
+
+    croak "There is already data stored in table 'depot'"
+        if $schema->resultset('Depot')->search->count;
 
     my @routes;
     $class->_import_file(
@@ -149,7 +153,7 @@ sub _import_depot {
                 qw( depot_number IATALikeCode group_id name1 name2 address1 address2 postcode city country phone fax mail web)
                 } = @data[ 0 .. 10 ];
 
-            push(@routes,\%to_create);
+            push( @routes, \%to_create );
         }
     );
 
@@ -192,26 +196,27 @@ sub generate_sqlite {
     croak "Database already exists: $sqlite_file." if -e $sqlite_file;
     my $dbh = DBI->connect( 'dbi:SQLite:dbname=' . $sqlite_file );
 
-    $dbh->do( "
-CREATE TABLE meta (
+    my $schema_defs = $class->create_table_statements;
+    foreach my $create (@$schema_defs) {
+        $dbh->do($create);
+    }
+}
+
+sub create_table_statements {
+    return [
+        "CREATE TABLE dpd_meta (
     version integer primary key,
     expires text,
     reference text
-)
-" );
-
-    $dbh->do( "
-CREATE TABLE country (
+)",
+        "CREATE TABLE dpd_country (
     num integer primary key,
     alpha2 text,
     alpha3 text,
     languages text,
     flagpost integer
-)
-" );
-
-    $dbh->do( "
-CREATE TABLE route (
+)",
+        "CREATE TABLE dpd_route (
     id integer PRIMARY KEY AUTOINCREMENT,
     dest_country text,
     begin_postcode text,
@@ -224,11 +229,8 @@ CREATE TABLE route (
     grouping_priority text,
     d_sort text,
     barcode_id text
-)
-" );
-    
-    $dbh->do( "
-CREATE TABLE depot (
+)",
+        "CREATE TABLE dpd_depot (
     depot_number integer PRIMARY KEY,
     IATALikeCode text,
     group_id text,
@@ -243,10 +245,8 @@ CREATE TABLE depot (
     fax text,
     mail text,
     web text
-)
-" );
-
-
+)",
+    ];
 }
 
 1;
