@@ -2,12 +2,12 @@ use 5.010;
 use strict;
 use warnings;
 
-#use Test::More tests => 4;
-#use Test::NoWarnings;
+use Test::More tests => 2;
 
+eval {
 use Business::DPD;
 use Business::DPD::Label;
-use Business::DPD::Render::PDFReuse;
+use Business::DPD::Render::PDFReuse::SlimA6;
 my $dpd = Business::DPD->new;
 $dpd->connect_schema;
 my $label = Business::DPD::Label->new($dpd,{
@@ -25,10 +25,16 @@ my $label = Business::DPD::Label->new($dpd,{
 
 $label->calc_fields;
 
-my $renderer = Business::DPD::Render::PDFReuse->new($dpd,{
+my $renderer = Business::DPD::Render::PDFReuse::SlimA6->new($dpd,{
     outdir => '.',    
     originator=>['babilu Service','Present Service Ullrich GmbH + Co.KG','Wetterkreuz 11','91058 Erlangen'],
     template=>'templates/default.pdf',
 });
 
 $renderer->render($label);
+};
+
+is($@,'','no error');
+ok(-e '001255501905002345615101276Z.pdf','pdf exists');
+unlink('001255501905002345615101276Z.pdf') unless $ENV{KEEP_PDF};
+
