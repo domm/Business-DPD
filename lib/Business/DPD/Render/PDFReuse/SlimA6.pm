@@ -53,9 +53,7 @@ sub render {
     my ( $self, $label ) = @_;
 
     my $code_hr = $label->code_human;
-
-    die unless $self->template;
-
+    
     prFile( catfile($self->outdir,$code_hr . '.pdf') );
     prMbox( 0, 0, 257, 420 );
     prForm( {
@@ -193,30 +191,7 @@ sub render {
 
 }
 
-sub _multiline {
-    my ( $self, $data, $opts ) = @_;
-
-    prFontSize( $opts->{fontsize} );
-    my $base_x = $opts->{base_x};
-    my $base_y = $opts->{base_y};
-    my $rotate = $opts->{rotate} || 0;
-
-    foreach my $line (@$data) {
-        next unless $line =~ /\w/;
-        prText(
-            $base_x, $base_y,
-            encode( 'latin1', decode( 'utf8', $line ) ),
-            $opts->{'align'} || '', $rotate
-        );
-        if ( $rotate == 270 ) {
-            $base_x -= ( $opts->{fontsize} + 1 );
-        }
-        elsif ( $rotate == 0 ) {
-            $base_y -= ( $opts->{fontsize} + 1 );
-        }
-    }
-
-}
+sub template { shift->inc2pdf(__PACKAGE__) }
 
 1;
 

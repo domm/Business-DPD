@@ -7,6 +7,8 @@ use 5.010;
 use parent qw(Business::DPD::Render);
 use Carp;
 use Encode;
+use PDF::Reuse;
+use PDF::Reuse::Barcode;
 
 __PACKAGE__->mk_accessors(qw(template));
 
@@ -82,6 +84,27 @@ sub _multiline {
             $base_y -= ( $fontsize + 1 );
         }
     }
+}
+
+=head3 inc2pdf
+
+    my $pdf_template = $class->inc2pdf(__PACKAGE__);
+
+Returns the path to the PDF template with the same name as the 
+implementing class (the PDF templates are installed alongside their 
+class).
+
+=cut
+
+sub inc2pdf {
+    my ( $class, $package ) = @_;
+    $package =~ s/::/\//g;
+    $package.='.pm';
+    my $from_inc = $INC{$package};
+    $from_inc =~ s/pm$/pdf/;
+    return $from_inc;
+
+    
 }
 
 1;
