@@ -9,10 +9,16 @@ my $builder = Module::Build->new(
     dist_author       => 'RevDev',
     dist_version_from => 'lib/Business/DPD.pm',
     build_requires    => {
-        'Test::More'       => 0,
+        'Test::More'       => '0',
+        'Test::NoWarnings' => '0.084',
+        'Test::Exception'  => '0.27',
     },
     requires => {
         'perl'             => '5.010',
+        'PDF::Reuse'    =>'0.35',
+        'PDF::Reuse::Barcode'=>'0.05',
+        'DateTime'      => '0.4304',
+        'DBD::SQLite'   => '1.14',
     },
     
     add_to_cleanup     => ['Business-DPD-*'],
