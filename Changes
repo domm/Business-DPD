@@ -1,5 +1,10 @@
 Revision history for Perl extension Business::DPD
 
+0.11   2008-10-23 10:40:55
+    - added deps to Build.PL (thanks to CPAN testers for the hints, 
+      but I blame spinne because she pressed me into a hastly release on #Austria.pm
+
+
 0.10   2008-10-22 22:32:11
     - first proper (local) release
 
