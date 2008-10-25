@@ -8,10 +8,10 @@ use parent qw(Class::Accessor::Fast);
 use Carp;
 
 # input data
-__PACKAGE__->mk_accessors(qw(zip city country depot serial service_code));
+__PACKAGE__->mk_accessors(qw(zip country depot serial service_code));
 
 # more input data
-__PACKAGE__->mk_accessors(qw( weight shipment_count_this shipment_count_total recipient reference_number order_number));
+__PACKAGE__->mk_accessors(qw(weight shipment_count_this shipment_count_total recipient reference_number order_number));
 
 
 # calculated values

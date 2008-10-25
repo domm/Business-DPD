@@ -45,7 +45,7 @@ as a standalone dist on CPAN or contact me to include your design.
 Render the label. Currently there is nearly no error checking. Also, 
 things might not fit into their boxes...
 
-The finished PDF will be named C<$barcode_human.pdf> 
+The finished PDF will be named C<$barcode.pdf> (i.e. without checksum or starting char)
 
 =cut
 
@@ -54,7 +54,7 @@ sub render {
 
     my $code_hr = $label->code_human;
     
-    prFile( catfile($self->outdir,$code_hr . '.pdf') );
+    prFile( catfile($self->outdir,$label->code . '.pdf') );
     prMbox( 0, 0, 257, 420 );
     prForm( {
             file => $self->template,
@@ -97,9 +97,11 @@ sub render {
     prText(
         126,
         89,
-        $now->strftime('%F %H:%M')
-            . "; ROUTEVER; Business-DPD-"
-            . Business::DPD->VERSION,
+        join('; ',
+            $now->strftime('%F %H:%M'),
+            $self->_dpd->schema->resultset('DpdMeta')->search()->first->version,
+            "Business-DPD-". Business::DPD->VERSION,
+        ),
         'center'
     );
 
@@ -158,10 +160,7 @@ sub render {
     );
 
     # recipient
-    $self->_multiline( [
-            @{ $label->recipient },
-            $label->country . '-' . $label->zip . ' ' . $label->city
-        ],
+    $self->_multiline( $label->recipient,
         {   fontsize => 8,
             base_x   => 10,
             base_y   => 386,
