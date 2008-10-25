@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use 5.010;
 
-use version; our $VERSION = version->new('0.11');
+use version; our $VERSION = version->new('0.12');
 
 use parent qw(Class::Accessor::Fast);
 use Business::DPD::DBIC;
@@ -106,7 +106,6 @@ sub generate_label {
     my ($self, $data) = @_;
 
     my $label = Business::DPD::Label->new($self, $data);
-
 }
 
 sub iso7064_mod37_36_checksum {
@@ -148,7 +147,6 @@ sub iso7064_mod37_36_checksum_map {
     $self->_iso7064_mod37_36_checksum_map(\%map);
     return (\%map,\@chars);
 }
-
 
 =head1 TODO
 

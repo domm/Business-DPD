@@ -1,5 +1,14 @@
 Revision history for Perl extension Business::DPD
 
+0.12   2008-10-25 16:00:13
+    - use plain barcode for filenam
+    - do not autogenerate city line for recipient
+    - import: set end_postcode to begin_postcode if its not defined 
+    - added missing dependency on DBIx::Class (thanks to cpan testers 
+      again..)
+    - more tests
+
+
 0.11   2008-10-23 10:40:55
     - added deps to Build.PL (thanks to CPAN testers for the hints, 
       but I blame spinne because she pressed me into a hastly release on #Austria.pm
