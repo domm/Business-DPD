@@ -19,6 +19,7 @@ my $builder = Module::Build->new(
         'PDF::Reuse::Barcode'=>'0.05',
         'DateTime'      => '0.4304',
         'DBD::SQLite'   => '1.14',
+        'DBIx::Class'   => '0.08010',
     },
     
     add_to_cleanup     => ['Business-DPD-*'],
