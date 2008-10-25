@@ -142,7 +142,8 @@ sub _import_routes {
             @to_create{
                 qw(dest_country begin_postcode end_postcode service_code routing_places sending_date o_sort d_depot grouping_priority d_sort barcode_id)
                 } = @data[ 0 .. 10 ];
-
+            $to_create{end_postcode} ||= $to_create{begin_postcode};
+    
             push( @routes, \%to_create );
         }
     );
