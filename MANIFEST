@@ -29,10 +29,12 @@ lib/Business/DPD/Render/PDFReuse/SlimA6.pdf
 lib/Business/DPD/Render/PDFReuse/SlimA6.pm
 Makefile.PL
 MANIFEST			This list of files
+META.yml
 README
-t/00_compile.t
+t/00-load.t
 t/DBIC/path_to_sqlite.t
 t/DPD/connect_schema.t
+t/DPD/generate_label.t
 t/DPD/iso7064_mod37_36_checksum.t
 t/DPD/iso7064_mod37_36_checksum_map.t
 t/DPD/new.t
@@ -47,4 +49,3 @@ xt/01_podspell.t
 xt/02_perlcritic.t
 xt/03_pod.t
 xt/perlcriticrc
-META.yml

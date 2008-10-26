@@ -1,7 +1,14 @@
 Revision history for Perl extension Business::DPD
 
+0.13   2008-10-26 20:27:45
+    - split up render into several methods for easier subclassing
+    - add y_offset
+    - fix encoding issue
+    -_multiline can now handle a string and an arrayref
+
+
 0.12   2008-10-25 16:00:13
-    - use plain barcode for filenam
+    - use plain barcode for filename
     - do not autogenerate city line for recipient
     - import: set end_postcode to begin_postcode if its not defined 
     - added missing dependency on DBIx::Class (thanks to cpan testers 
