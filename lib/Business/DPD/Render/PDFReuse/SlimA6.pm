@@ -50,26 +50,27 @@ The finished PDF will be named C<$barcode.pdf> (i.e. without checksum or startin
 =cut
 
 sub render {
-    my ( $self, $label ) = @_;
+    my ( $self, $label, $y_offset ) = @_;
+    $y_offset //=0;
 
     my $outfile = catfile($self->outdir,$label->code . '.pdf');
 
-    $self->_begin_doc($label, $outfile);
-    $self->_add_elements($label);
-    $self->_end_doc($label);
+    $self->_begin_doc($label, $outfile, $y_offset);
+    $self->_add_elements($label, $y_offset);
+    $self->_end_doc($label, $y_offset);
     return $outfile;
 }
 
 sub _begin_doc {
-    my ( $self, $label, $outfile ) = @_;
+    my ( $self, $label, $outfile, $y_offset ) = @_;
     
     prFile( $outfile );
-    prMbox( 0, 0, 257, 420 );
+    prMbox( 0, 0, 257, $y_offset+420 );
     prForm( {
             file => $self->template,
             page => 1,
             x    => 0,
-            y    => 0
+            y    => $y_offset+0,
         }
     );
 }
@@ -77,7 +78,6 @@ sub _begin_doc {
 sub _add_elements {
     my ( $self, $label, $y_offset ) = @_;
     
-    $y_offset //=0;
     
     PDF::Reuse::Barcode::Code128(
         mode           => 'graphic',
