@@ -183,11 +183,20 @@ sub render {
     prText( 155, 295, $count, 'center' );
 
     # referenznr
-    prFontSize(8);
-    prText( 37, 308, $label->reference_number );
+    $self->_multiline( $label->reference_number,
+        {   fontsize => 8,
+            base_x   => 37,
+            base_y   => 308,
+        }
+    );
 
     # auftragsnr
-    prText( 37, 283, $label->order_number );
+    $self->_multiline( $label->order_number,
+        {   fontsize => 8,
+            base_x   => 37,
+            base_y   => 283,
+        }
+    );
 
     prEnd();
 

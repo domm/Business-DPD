@@ -3,7 +3,8 @@ use strict;
 use warnings;
 
 use Test::More tests => 2;
-
+use Encode;
+use utf8;
 eval {
     use Business::DPD;
     use Business::DPD::Label;
@@ -19,6 +20,8 @@ eval {
         weight          => '23,45 KG',
         shipment_count_this=>1,
         shipment_count_total=>2,
+        reference_number=>"foobar",
+        order_number=>["aaa","bbb","ccc"],
         recipient=> ['Klinikum Stadt Hanau','Wöchnerinnenstation H5','Frau Sabine Leue','Leimstr. 20','DE-1255 Hanau'],
     });
 

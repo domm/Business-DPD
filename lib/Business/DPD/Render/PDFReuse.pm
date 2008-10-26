@@ -70,11 +70,13 @@ sub _multiline {
     
     prFontSize( $fontsize );
 
+    $data=[$data] unless ref($data) eq 'ARRAY';
+
     foreach my $line (@$data) {
-        next unless $line =~ /\w/;
+        next unless $line =~ /[\w ]/;
         prText(
             $base_x, $base_y,
-            encode( 'latin1', decode( 'utf8', $line ) ),
+            $line,
             $opts->{'align'} || '', $rotate
         );
         if ( $rotate == 270 ) {
