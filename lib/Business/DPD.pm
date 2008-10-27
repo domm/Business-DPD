@@ -15,7 +15,7 @@ __PACKAGE__->mk_accessors(qw(schema schema_class dbi_connect _iso7064_mod37_36_c
 
 =head1 NAME
 
-Business::DPD - handle DPD lable generation
+Business::DPD - handle DPD label generation
 
 =head1 SYNOPSIS
 
