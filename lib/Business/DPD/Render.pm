@@ -12,7 +12,7 @@ __PACKAGE__->mk_accessors(qw(_dpd outdir originator));
 
 =head1 NAME
 
-Business::DPD::Render - render a lable
+Business::DPD::Render - render a label
 
 =head1 SYNOPSIS
 

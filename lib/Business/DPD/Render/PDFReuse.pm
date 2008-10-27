@@ -14,7 +14,7 @@ __PACKAGE__->mk_accessors(qw(template));
 
 =head1 NAME
 
-Business::DPD::Render::PDFReuse::SlimA6 - render a lable in slim A6 using PDF::Reuse
+Business::DPD::Render::PDFReuse::SlimA6 - render a label in slim A6 using PDF::Reuse
 
 =head1 SYNOPSIS
 
@@ -27,7 +27,7 @@ Business::DPD::Render::PDFReuse::SlimA6 - render a lable in slim A6 using PDF::R
 
 =head1 DESCRIPTION
 
-Render a DPD lable using a slim A6-based template that also fits on a 
+Render a DPD label using a slim A6-based template that also fits on a 
 A4-divided-by-three-page. This is what we need at the moment. If you 
 want to provide other formats, please go ahead and either release them 
 as a standalone dist on CPAN or contact me to include your design.
