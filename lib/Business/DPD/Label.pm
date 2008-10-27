@@ -151,13 +151,16 @@ sub calc_routing {
     my $schema = $self->_dpd->schema;
 
     my $route_rs = $schema->resultset('DpdRoute')->search({
-        dest_country=>$self->country,
-        begin_postcode => { '<=' => $self->zip },
-        end_postcode => { '>=' => $self->zip },
-    });
+        'me.dest_country'=>$self->country,
+        'me.begin_postcode' => { '<=' => $self->zip },
+        'me.end_postcode' => { '>=' => $self->zip },
+    },
+    {
+        order_by=>'me.begin_postcode DESC',
+        rows=>1,
+    } );
 
     croak "No route found!" if $route_rs->count == 0;
-    croak "More than one route found, something's fishy!" unless $route_rs->count == 1;
     
     my $route=$route_rs->first;
 
