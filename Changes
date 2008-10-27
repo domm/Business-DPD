@@ -1,5 +1,11 @@
 Revision history for Perl extension Business::DPD
 
+0.14   2008-10-27 15:10:33
+    - fix problem with postcodes that are included in other postcodes 
+      (eg DE-51643) - thanks to maros for spotting this 
+    - fix end_postcode in embedded sqlite DB 
+
+
 0.13   2008-10-26 20:27:45
     - split up render into several methods for easier subclassing
     - add y_offset
