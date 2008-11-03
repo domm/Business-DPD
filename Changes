@@ -1,5 +1,10 @@
 Revision history for Perl extension Business::DPD
 
+0.15	2008-11-03 11:27:11
+    - squash a undefined-value warning (Thomas Klausner)
+    - Fixed 'lable' typos in pod (Maros Kollar)
+
+
 0.14   2008-10-27 15:10:33
     - fix problem with postcodes that are included in other postcodes 
       (eg DE-51643) - thanks to maros for spotting this 
