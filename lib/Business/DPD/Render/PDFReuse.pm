@@ -73,7 +73,7 @@ sub _multiline {
     $data=[$data] unless ref($data) eq 'ARRAY';
 
     foreach my $line (@$data) {
-        next unless $line =~ /[\w ]/;
+        next unless $line && $line =~ /[\w ]/;
         prText(
             $base_x, $base_y,
             $line,
