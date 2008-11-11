@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use 5.010;
 
-use version; our $VERSION = version->new('0.16');
+use version; our $VERSION = version->new('0.17');
 
 use parent qw(Class::Accessor::Fast);
 use Business::DPD::DBIC;

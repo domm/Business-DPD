@@ -1,5 +1,11 @@
 Revision history for Perl extension Business::DPD
 
+0.17   2008-11-11 12:14:52
+    - added dependency on Text::Autoformat
+    - wrap text that might be to long
+    - nicer test data (ACME++)
+
+
 0.16	2008-11-04 21:26:18
     - Smaller pdf template made in AI (Maros Kollar)
 
