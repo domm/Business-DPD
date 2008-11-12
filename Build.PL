@@ -20,6 +20,7 @@ my $builder = Module::Build->new(
         'DateTime'      => '0.4304',
         'DBD::SQLite'   => '1.14',
         'DBIx::Class'   => '0.08010',
+        'Text::Autoformat'=>'1.13',
     },
     
     add_to_cleanup     => ['Business-DPD-*'],

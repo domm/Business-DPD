@@ -179,6 +179,7 @@ sub _add_elements {
         {   fontsize => 8,
             base_x   => 10,
             base_y   => $y_offset+386,
+            max_width=>35,
         }
     );
 
@@ -202,6 +203,7 @@ sub _add_elements {
         {   fontsize => 8,
             base_x   => 37,
             base_y   => $y_offset+308,
+            max_width=>15,
         }
     );
 
@@ -210,6 +212,7 @@ sub _add_elements {
         {   fontsize => 8,
             base_x   => 37,
             base_y   => $y_offset+283,
+            max_width=>15,
         }
     );
 }

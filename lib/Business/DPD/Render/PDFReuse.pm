@@ -9,6 +9,7 @@ use Carp;
 use Encode;
 use PDF::Reuse;
 use PDF::Reuse::Barcode;
+use Text::Autoformat;
 
 __PACKAGE__->mk_accessors(qw(template));
 
@@ -67,23 +68,35 @@ sub _multiline {
     my $base_x = $opts->{base_x} || 0;
     my $base_y = $opts->{base_y} || 0;
     my $rotate = $opts->{rotate} || 0;
-    
+    my $max_width = $opts->{max_width};
+
     prFontSize( $fontsize );
 
     $data=[$data] unless ref($data) eq 'ARRAY';
 
-    foreach my $line (@$data) {
-        next unless $line && $line =~ /[\w ]/;
-        prText(
-            $base_x, $base_y,
-            $line,
-            $opts->{'align'} || '', $rotate
-        );
-        if ( $rotate == 270 ) {
-            $base_x -= ( $fontsize + 1 );
+    foreach my $rawline (@$data) {
+        next unless $rawline && $rawline =~ /[\w ]/;
+        my @lines;
+        if ( $max_width && length($rawline) >  $max_width) {
+            my $formatted = autoformat($rawline, {left=>1,right=>$max_width});
+            @lines = split(/\n/,$formatted);
         }
-        elsif ( $rotate == 0 ) {
-            $base_y -= ( $fontsize + 1 );
+        else {
+            push(@lines,$rawline);
+        }
+       
+        foreach my $line (@lines) {
+            prText(
+                $base_x, $base_y,
+                $line,
+                $opts->{'align'} || '', $rotate
+            );
+            if ( $rotate == 270 ) {
+                $base_x -= ( $fontsize + 1 );
+            }
+            elsif ( $rotate == 0 ) {
+                $base_y -= ( $fontsize + 1 );
+            }
         }
     }
 }
