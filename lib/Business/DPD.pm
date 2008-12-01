@@ -35,7 +35,9 @@ Business::DPD - handle DPD label generation
 
 =head1 DESCRIPTION
 
-TODO
+Calculate routing information for parcel sending via DPD (http://dpd.com)
+
+Generate labels for parcels (including barcode)
 
 =head1 METHODS
 
