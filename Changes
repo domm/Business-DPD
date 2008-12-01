@@ -1,5 +1,11 @@
 Revision history for Perl extension Business::DPD
 
+0.18	2008-12-01 10:54:10
+    - Due to a bug in PDF::Reuse (http://rt.cpan.org/Ticket/Display.html?id=41287)
+      using an external TTF-File can lead to problems with to many open filehandles
+      Therefore SlimA6 now uses the plain Times font.
+
+
 0.17   2008-11-11 12:14:52
     - added dependency on Text::Autoformat
     - wrap text that might be to long
