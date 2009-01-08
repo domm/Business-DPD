@@ -11,7 +11,6 @@ lib/Business/DPD/DBIC/Schema/DpdCountry.pm
 lib/Business/DPD/DBIC/Schema/DpdDepot.pm
 lib/Business/DPD/DBIC/Schema/DpdMeta.pm
 lib/Business/DPD/DBIC/Schema/DpdRoute.pm
-lib/Business/DPD/dpd.sqlite
 lib/Business/DPD/Label.pm
 lib/Business/DPD/Render.pm
 lib/Business/DPD/Render/PDFReuse.pm
@@ -29,6 +28,7 @@ t/DPD/generate_label.t
 t/DPD/iso7064_mod37_36_checksum.t
 t/DPD/iso7064_mod37_36_checksum_map.t
 t/DPD/new.t
+t/dpd_test.sqlite
 t/Label/barcode.t
 t/Label/calc_routing.t
 t/Label/calc_target_country_code.t
@@ -37,6 +37,12 @@ t/Label/new.t
 t/Render/PDFReuse/slimA6.t
 templates/SlimA6.ai
 templates/slimA6.odt
+testdata/COUNTRY
+testdata/DEPOTS
+testdata/ROUTES
+testdata/SERVICE
+testdata/SERVICEINFO.DE
+testdata/SERVICEINFO.EN
 xt/01_podspell.t
 xt/02_perlcritic.t
 xt/03_pod.t
