@@ -1,14 +1,5 @@
 Build.PL
 Changes
-data/COUNTRY
-data/DEPOTS
-data/LOCATION.DE
-data/LOCATION.EN
-data/LOCATION.FR
-data/ROUTES
-data/SERVICE
-data/SERVICEINFO.DE
-data/SERVICEINFO.EN
 helper/generate_dbix_schema.pl
 helper/generate_sqlite_db.pl
 helper/import_dpd_data.pl
@@ -44,6 +35,7 @@ t/Label/calc_target_country_code.t
 t/Label/calc_tracking_number.t
 t/Label/new.t
 t/Render/PDFReuse/slimA6.t
+templates/SlimA6.ai
 templates/slimA6.odt
 xt/01_podspell.t
 xt/02_perlcritic.t

@@ -46,3 +46,6 @@
 # Avoid archives of this distribution
 \bBusiness-DPD-[\d\.\_]+
 \blab
+\bdata
+\btestdata
+

@@ -15,4 +15,30 @@ __END__
 
 =head1 NAME
 
+import_dpd_data.pl
+
+=head1 SYNOPSIS
+
+  import_dpd_data.pl path/to/dir/containing/routedbfiles
+
+=head1 DESCRIPTION
+
+Import the current DPD route DB into an sqlite DB
+
+=head1 AUTHOR
+
+Thomas Klausner C<< domm@cpan.org >>
+
+RevDev E<lt>we {at} revdev.atE<gt>
+
+=head1 SEE ALSO
+
+Business::DPD
+
+=head1 LICENSE
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
 
