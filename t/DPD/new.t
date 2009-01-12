@@ -12,7 +12,7 @@ use Business::DPD;
 
     is($dpd->schema_class,'Business::DPD::DBIC::Schema','default schema class');
     is(@{$dpd->dbi_connect},1,'default dbi connect, 1 element');
-    like($dpd->dbi_connect->[0],qr{Business/DPD/dpd.sqlite$},'default dbi connect, connect');
+    like($dpd->dbi_connect->[0],qr{t/dpd_test.sqlite$},'default dbi connect, connect');
 }
 
 {
