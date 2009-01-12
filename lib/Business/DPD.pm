@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use 5.010;
 
-use version; our $VERSION = version->new('0.18');
+use version; our $VERSION = version->new('0.19');
 
 use parent qw(Class::Accessor::Fast);
 use Business::DPD::DBIC;
@@ -156,9 +156,9 @@ __END__
 
 =head1 AUTHOR
 
-RevDev E<lt>we {at} revdev.atE<gt>
+Thomas Klausner C<< domm AT cpan.org >>
 
-=head1 SEE ALSO
+RevDev E<lt>we {at} revdev.atE<gt>
 
 =head1 LICENSE
 

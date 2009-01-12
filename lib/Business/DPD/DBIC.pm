@@ -213,9 +213,14 @@ this...
 =cut
 
 sub path_to_sqlite {
-    my $base = $INC{'Business/DPD/DBIC.pm'};
-    $base =~ s/DBIC.pm$/dpd.sqlite/;
-    return $base;
+    if ($INC{'Test/More.pm'}) {
+        return 't/dpd_test.sqlite'; 
+    }
+    else {
+        my $base = $INC{'Business/DPD/DBIC.pm'};
+        $base =~ s/DBIC.pm$/dpd.sqlite/;
+        return $base;
+    }
 }
 
 =head3 generate_sqlite
