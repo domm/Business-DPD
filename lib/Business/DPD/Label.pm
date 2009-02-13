@@ -158,6 +158,13 @@ sub calc_routing {
         rows=>1,
     } );
 
+    if ($self->service_code eq '101') {
+        $route_rs = $route_rs->search({service_code=>''});
+    }
+    else {
+        $route_rs = $route_rs->search({service_code=> { 'LIKE' => '%'.$self->service_code.'%' } });
+    }
+
     croak "No route found!" if $route_rs->count == 0;
     
     my $route=$route_rs->first;
