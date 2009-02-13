@@ -31,6 +31,7 @@ t/DPD/new.t
 t/dpd_test.sqlite
 t/Label/barcode.t
 t/Label/calc_routing.t
+t/Label/calc_routing_RT#761.t
 t/Label/calc_target_country_code.t
 t/Label/calc_tracking_number.t
 t/Label/new.t
