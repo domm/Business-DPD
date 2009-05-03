@@ -1,6 +1,7 @@
 cover_db
 META.yml
 Makefile
+Makefile.PL
 MANIFEST.bak
 blib
 inc
