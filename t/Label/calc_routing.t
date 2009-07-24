@@ -42,7 +42,7 @@ $dpd->connect_schema;
 
     $label->calc_routing;
 
-    is( $label->o_sort,  '29',   'o_sort' );
+    is( $label->o_sort,  'UU71',   'o_sort' );
     is( $label->d_sort,  '3001', 'd_sort' );
     is( $label->d_depot, '0158', 'd_depot' );
 }

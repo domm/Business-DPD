@@ -43,7 +43,7 @@ Business::DPD::Label - one DPD label
 
 =head1 DESCRIPTION
 
-TODO
+Calculate the data that's needed for a valid addresse label.
 
 =head1 METHODS
 
@@ -61,7 +61,7 @@ TODO
         service_code    => '101',
     });
 
-TODO: take a Business::DPD::Address as an agrument (instead of zip & country)
+TODO?: take a Business::DPD::Address as an agrument (instead of zip & country)
 
 =cut
 
@@ -142,8 +142,6 @@ Calculates the following fields:
 
   o_sort d_sort d_depot barcode_id
   
-TODO: calc route_code ("Beförderungsweg")
-
 =cut
 
 sub calc_routing {
@@ -159,6 +157,13 @@ sub calc_routing {
         order_by=>'me.begin_postcode DESC',
         rows=>1,
     } );
+
+    if ($self->service_code eq '101') {
+        $route_rs = $route_rs->search({service_code=>''});
+    }
+    else {
+        $route_rs = $route_rs->search({service_code=> { 'LIKE' => '%'.$self->service_code.'%' } });
+    }
 
     croak "No route found!" if $route_rs->count == 0;
     
@@ -243,12 +248,6 @@ sub calc_barcode {
 kennzeichnung (kleingewicht, Express)
 Servicetext
 Servicecode
-
-Lableursprung( datum/zeit, routenDB version, software)
-
-=head3 Sendungsinformationsfeld
-
-input: adressdaten
 
 =cut
 

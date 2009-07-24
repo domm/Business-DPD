@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use 5.010;
 
-use version; our $VERSION = version->new('0.17');
+use version; our $VERSION = version->new('0.20');
 
 use parent qw(Class::Accessor::Fast);
 use Business::DPD::DBIC;
@@ -35,7 +35,9 @@ Business::DPD - handle DPD label generation
 
 =head1 DESCRIPTION
 
-TODO
+Calculate routing information for parcel sending via DPD (http://dpd.com)
+
+Generate labels for parcels (including barcode)
 
 =head1 METHODS
 
@@ -148,68 +150,15 @@ sub iso7064_mod37_36_checksum_map {
     return (\%map,\@chars);
 }
 
-=head1 TODO
-
-=head3 Routenfeld
-
-* tracking number:
-
-input: depot number (plus 5+6 stelle?), laufende nummer
-output: tracking number incl checksum
-
-* routing:
-
-input: target zip, Land,
-output: O-Sort, Land, Empfangsdepot, Beförderungsweg, D-Sort
-
-* weiters:
-
-kennzeichnung (kleingewicht, Express)
-Servicetext
-Servicecode
-
-Lableursprung( datum/zeit, routenDB version, software)
-
-=head3 Barcodefeld
-
-input: target zip, tracking number, servicecode, target country number
-output: barcode-number incl checksum, barcode image
-
-=head3 Sendungsinformationsfeld
-
-input: adressdaten
-
-=cut
-
-=head1 needed methods
-
-* one object for one address
-* required fields
-** target country
-** target zipcode
-** laufende nummer
-** depot number
-** service code
-* semi-required
-** address data
-* optional
-** referenznummer
-** auftragsnummer
-** gewicht
-** n of m
-** template
-
-=cut
-
 1;
 
 __END__
 
 =head1 AUTHOR
 
-RevDev E<lt>we {at} revdev.atE<gt>
+Thomas Klausner C<< domm AT cpan.org >>
 
-=head1 SEE ALSO
+RevDev E<lt>we {at} revdev.atE<gt>
 
 =head1 LICENSE
 

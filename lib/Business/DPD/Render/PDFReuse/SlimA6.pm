@@ -90,9 +90,10 @@ sub _add_elements {
         value          => chr(0xf5) . $label->code_barcode
     );
 
-    my $font_path = $self->template;
-    $font_path=~s/SlimA6.pdf/MONACO.TTF/;
-    prTTFont($font_path);
+#    my $font_path = $self->template;
+#    $font_path=~s/SlimA6.pdf/MONACO.TTF/;
+#    prTTFont($font_path);
+	prFont('Times-Roman');
     
     # barcode
     prFontSize(9);
