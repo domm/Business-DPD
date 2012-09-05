@@ -93,7 +93,7 @@ sub _add_elements {
 #    my $font_path = $self->template;
 #    $font_path=~s/SlimA6.pdf/MONACO.TTF/;
 #    prTTFont($font_path);
-	prFont('Times-Roman');
+	prFont('Courier-Bold');
     
     # barcode
     prFontSize(9);
@@ -175,14 +175,31 @@ sub _add_elements {
         }
     );
 
+
     # recipient
-    $self->_multiline( $label->recipient,
-        {   fontsize => 8,
-            base_x   => 10,
+    my (@recipient,$locality);
+    
+    foreach my $line (@{$label->recipient}) {
+        if (index($line,$label->zip) > 0
+            && ! defined $locality) {
+            $locality = $line;
+            $locality = $label->country.'-'.$locality
+                unless index($locality,uc($label->country)) == 0;
+        } else {
+            push(@recipient,$line);
+        }   
+    }
+    
+    $self->_multiline( \@recipient,
+        {   fontsize => 9,
+            base_x   => 5,
             base_y   => $y_offset+386,
-            max_width=>35,
+            max_width=>36,
         }
     );
+    
+    prFontSize(13);
+    prText( 5, $y_offset+325, $locality, 'left' );
 
     # weight
     prFontSize(11);
