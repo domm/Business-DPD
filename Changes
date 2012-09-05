@@ -1,5 +1,9 @@
 Revision history for Perl extension Business::DPD
 
+0.21   2009-02-13 12:10:26
+    - Improve rendering to stick closer to official UPS-Label spec
+    - Smaller pdf template filesize
+
 0.20   2009-02-13 12:10:26
     - potential fix for wrong route calculation if the ROUTE.db 
       defines service codes (see DE zip 70734)
