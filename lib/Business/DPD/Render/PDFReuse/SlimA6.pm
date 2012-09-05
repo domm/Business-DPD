@@ -192,14 +192,14 @@ sub _add_elements {
     
     $self->_multiline( \@recipient,
         {   fontsize => 9,
-            base_x   => 5,
+            base_x   => 3,
             base_y   => $y_offset+386,
-            max_width=>36,
+            max_width=> 35,
         }
     );
     
     prFontSize(13);
-    prText( 5, $y_offset+325, $locality, 'left' );
+    prText( 3, $y_offset+322, $locality, 'left' );
 
     # weight
     prFontSize(11);

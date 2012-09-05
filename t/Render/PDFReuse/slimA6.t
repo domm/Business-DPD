@@ -22,7 +22,7 @@ eval {
         shipment_count_total=>2,
         reference_number=>"ACME Dehydrated Boulders",
         order_number=>["aaa","bbb"],
-        recipient=> ['Wile E. Coyote','Somewhere in the hot & dry desert','Highway 20','DE-12555 Desert','bitte 3x klingeln'],
+        recipient=> ['Wile E. Coyote','Somewhere in the hot & dry desert!!','Highway 20','DE-12555 Desert','bitte 3x klingeln'],
     });
 
     $label->calc_fields;
