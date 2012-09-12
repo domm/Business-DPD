@@ -184,10 +184,10 @@ sub _add_elements {
     my (@recipient,$locality);
     
     foreach my $line (@{$label->recipient}) {
-        if (index($line,$label->zip) > 0
+        if (index($line,$label->zip) >= 0
             && ! defined $locality) {
             $locality = $line;
-            $locality = $label->country.'-'.$locality
+            $locality = uc($label->country).'-'.$locality
                 unless index($locality,uc($label->country)) == 0;
         } else {
             push(@recipient,$line);
