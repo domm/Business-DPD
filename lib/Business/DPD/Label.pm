@@ -21,6 +21,24 @@ __PACKAGE__->mk_accessors(qw(_fields_calculated tracking_number checksum_trackin
 __PACKAGE__->mk_accessors(qw(_dpd));
 
 
+our %SERVICE_TEXT = (
+    101     => 'D',
+    102     => 'D-HAZ',
+    105     => 'D-EXW',
+    106     => 'D-DXW-HAZ',
+    109     => 'D-COD',
+    110     => 'D-COD-HAZ',
+    113     => 'D-SWAP',
+    136     => 'D',
+    154     => 'PARCELetter',
+    155     => 'PM2',
+    161     => 'PM2-COD',
+    179     => 'AM1',
+    191     => 'AM1-COD',
+    225     => 'AM2',
+    137     => 'AM2-COD',
+    350     => 'AM0',
+);
 
 =head1 NAME
 
@@ -194,6 +212,27 @@ sub calc_target_country_code {
     my $c = $schema->resultset('DpdCountry')->search({ alpha2 => $self->country })->first; 
     $self->target_country_code($c->num);
 }
+
+
+=head3 service_text
+
+ $label->service_text
+
+Returns the service text for the given service code
+
+=cut
+
+sub service_text {
+    my ($self) = @_;
+    
+    return $SERVICE_TEXT{$self->service_code}
+        if defined $SERVICE_TEXT{$self->service_code};
+    
+    return;  
+}
+    
+
+
 
 =head3 calc_barcode
 

@@ -102,10 +102,14 @@ sub _add_elements {
     # tracking number
     prFontSize(26);
     prText( 8, $y_offset+174, $label->depot );
-    prFontSize(20);
+    prFontSize(16);
     prText( 72, $y_offset+174, $label->serial );
-    prFontSize(14);
-    prText( 195, $y_offset+174, $label->checksum_tracking_number );
+    prFontSize(12);
+    prText( 170, $y_offset+174, $label->checksum_tracking_number );
+
+    # Service
+    prFontSize(16);
+    prText( 253, $y_offset+174, $label->service_text, 'right' );
 
     # Label-Ursprug
     prFontSize(4);
