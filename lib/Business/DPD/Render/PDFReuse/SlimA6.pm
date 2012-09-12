@@ -81,10 +81,10 @@ sub _add_elements {
     
     PDF::Reuse::Barcode::Code128(
         mode           => 'graphic',
-        x              => 20,
+        x              => 8,
         text           => 0,
         ySize          => 3,
-        xSize          => 0.9,
+        xSize          => 1,
         y              => $y_offset-5,
         drawBackground => 0,
         value          => chr(0xf5) . $label->code_barcode
@@ -203,7 +203,7 @@ sub _add_elements {
     );
     
     prFontSize(13);
-    prText( 3, $y_offset+322, $locality, 'left' );
+    prText( 3, $y_offset+325, $locality, 'left' );
 
     # weight
     prFontSize(11);
