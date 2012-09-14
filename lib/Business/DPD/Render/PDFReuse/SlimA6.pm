@@ -65,7 +65,7 @@ sub _begin_doc {
     my ( $self, $label, $outfile, $y_offset ) = @_;
     
     prFile( $outfile );
-    prMbox( 0, 0, 257, $y_offset+420 );
+    prMbox( 0, 0, 258, $y_offset+414 );
     prForm( {
             file => $self->template,
             page => 1,
@@ -97,26 +97,26 @@ sub _add_elements {
     
     # barcode
     prFontSize(9);
-    prText( 126, $y_offset+12, $label->code_human, 'center' );
+    prText( 126, $y_offset+8, $label->code_human, 'center' );
 
     # tracking number
     prFontSize(26);
-    prText( 8, $y_offset+174, $label->depot );
+    prText( 8, $y_offset+168, $label->depot );
     prFontSize(16);
-    prText( 72, $y_offset+174, $label->serial );
+    prText( 72, $y_offset+168, $label->serial );
     prFontSize(12);
-    prText( 170, $y_offset+174, $label->checksum_tracking_number );
+    prText( 170, $y_offset+168, $label->checksum_tracking_number );
 
     # Service
     prFontSize(16);
-    prText( 253, $y_offset+174, $label->service_text, 'right' );
+    prText( 253, $y_offset+168, $label->service_text, 'right' );
 
     # Label-Ursprug
     prFontSize(4);
     my $now = DateTime->now;
     prText(
         126,
-        $y_offset+89,
+        $y_offset+85,
         join('; ',
             $now->strftime('%F %H:%M'),
             $self->_dpd->schema->resultset('DpdMeta')->search()->first->version,
@@ -127,19 +127,19 @@ sub _add_elements {
 
     # Servicecode-Land-EmpfaengerPLZ
     prFontSize(9);
-    prText( 126, $y_offset+98,
+    prText( 126, $y_offset+94,
         join( '-', $label->service_code, $label->country, $label->zip ),
         'center' );
 
     # routing
     prFontSize(28);
-    prText( 20, $y_offset+95, $label->o_sort );
-    prText( 237, $y_offset+95, $label->d_sort, 'right' );
+    prText( 20, $y_offset+91, $label->o_sort );
+    prText( 237, $y_offset+91, $label->d_sort, 'right' );
     if ( $label->route_code ) {
         prFontSize(34);
         prText(
             126,
-            $y_offset+130,
+            $y_offset+126,
             $label->country . '-'
                 . $label->d_depot . '-'
                 . $label->route_code,
@@ -148,7 +148,7 @@ sub _add_elements {
     }
     else {
         prFontSize(40);
-        prText( 126, $y_offset+130, $label->country . '-' . $label->d_depot, 'center' );
+        prText( 126, $y_offset+126, $label->country . '-' . $label->d_depot, 'center' );
     }
 
     # depot info
@@ -164,7 +164,7 @@ sub _add_elements {
         \@dep,
         {   fontsize => 4,
             base_x   => 250,
-            base_y   => $y_offset+390,
+            base_y   => $y_offset+387,
             rotate   => '270',
         }
     );
@@ -174,7 +174,7 @@ sub _add_elements {
         $self->originator,
         {   fontsize => 4,
             base_x   => 215,
-            base_y   => $y_offset+385,
+            base_y   => $y_offset+387,
             rotate   => '270',
         }
     );
@@ -197,17 +197,17 @@ sub _add_elements {
     $self->_multiline( \@recipient,
         {   fontsize => 9,
             base_x   => 3,
-            base_y   => $y_offset+386,
+            base_y   => $y_offset+381,
             max_width=> 35,
         }
     );
     
-    prFontSize(13);
-    prText( 3, $y_offset+325, $locality, 'left' );
+    prFontSize(14);
+    prText( 3, $y_offset+316, $locality, 'left' );
 
     # weight
     prFontSize(11);
-    prText( 155, $y_offset+272, $label->weight, 'center' );
+    prText( 155, $y_offset+268, $label->weight, 'center' );
 
     # lieferung n / x
     my $count;
@@ -218,13 +218,13 @@ sub _add_elements {
     else {
         $count = '1/1';
     }
-    prText( 155, $y_offset+295, $count, 'center' );
+    prText( 155, $y_offset+291, $count, 'center' );
 
     # referenznr
     $self->_multiline( $label->reference_number,
         {   fontsize => 8,
             base_x   => 37,
-            base_y   => $y_offset+308,
+            base_y   => $y_offset+302,
             max_width=>15,
         }
     );
@@ -233,7 +233,7 @@ sub _add_elements {
     $self->_multiline( $label->order_number,
         {   fontsize => 8,
             base_x   => 37,
-            base_y   => $y_offset+283,
+            base_y   => $y_offset+276,
             max_width=>15,
         }
     );
