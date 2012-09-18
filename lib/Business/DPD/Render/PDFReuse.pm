@@ -65,9 +65,10 @@ sub _multiline {
     my ( $self, $data, $opts ) = @_;
 
     my $fontsize =  $opts->{fontsize} || 6;
-    my $base_x = $opts->{base_x} || 0;
-    my $base_y = $opts->{base_y} || 0;
-    my $rotate = $opts->{rotate} || 0;
+    my $base_x = $opts->{base_x} // 0;
+    my $base_y = $opts->{base_y} // 0;
+    my $rotate = $opts->{rotate} // 0;
+    my $line_height = $opts->{line_height} // 1;
     my $max_width = $opts->{max_width};
 
     prFontSize( $fontsize );
@@ -92,10 +93,10 @@ sub _multiline {
                 $opts->{'align'} || '', $rotate
             );
             if ( $rotate == 270 ) {
-                $base_x -= ( $fontsize + 1 );
+                $base_x -= ( $fontsize + $line_height );
             }
             elsif ( $rotate == 0 ) {
-                $base_y -= ( $fontsize + 1 );
+                $base_y -= ( $fontsize + $line_height  );
             }
         }
     }

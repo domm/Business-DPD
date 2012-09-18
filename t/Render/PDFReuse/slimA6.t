@@ -29,7 +29,7 @@ eval {
 
     my $renderer = Business::DPD::Render::PDFReuse::SlimA6->new($dpd,{
         outdir => '.',    
-        originator=>['ACME Corp.','Your favourite provider of cool tools','Some street 17','91058 Erlangen'],
+        originator=>['ACME Corp.','Your favourite provider of cool tools','Some street 17','DE-91058 Erlangen','Tel 12345'],
         template=>'templates/default.pdf',
     });
 

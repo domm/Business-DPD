@@ -162,20 +162,22 @@ sub _add_elements {
     push( @dep, 'Fax: ' . $depot->fax )   if $depot->fax;
     $self->_multiline(
         \@dep,
-        {   fontsize => 4,
+        {   fontsize => 5,
             base_x   => 250,
             base_y   => $y_offset+387,
             rotate   => '270',
+            line_height => 0.5,
         }
     );
 
-    # originator{
+    # originator
     $self->_multiline(
         $self->originator,
-        {   fontsize => 4,
-            base_x   => 215,
+        {   fontsize => 5,
+            base_x   => 217,
             base_y   => $y_offset+387,
             rotate   => '270',
+            line_height => 0.5,
         }
     );
 
@@ -202,7 +204,7 @@ sub _add_elements {
         }
     );
     
-    prFontSize(14);
+    prFontSize(13);
     prText( 3, $y_offset+316, $locality, 'left' );
 
     # weight
