@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use 5.010;
 
+use version; our $VERSION = version->new('0.22');
+
 use parent qw(Business::DPD::Render::PDFReuse);
 use Carp;
 use PDF::Reuse;

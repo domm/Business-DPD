@@ -3,6 +3,8 @@ package Business::DPD::DBIC::Schema;
 use strict;
 use warnings;
 
+use version; our $VERSION = version->new('0.22');
+
 use base 'DBIx::Class::Schema';
 
 __PACKAGE__->load_classes;
