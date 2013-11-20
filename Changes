@@ -1,5 +1,10 @@
 Revision history for Perl extension Business::DPD
 
+0.22   2013-XX-XX
+    - using TTF-File again because utf8 characters don't work the other way
+      closing file descriptors that remains open due to bug in PDF::Reuse
+      (http://rt.cpan.org/Ticket/Display.html?id=41287)
+
 0.21   2009-02-13 12:10:26
     - Improve rendering to stick closer to official UPS-Label spec
     - Smaller pdf template filesize

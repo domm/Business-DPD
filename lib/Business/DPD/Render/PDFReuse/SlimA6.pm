@@ -11,6 +11,8 @@ use PDF::Reuse::Barcode;
 use Encode;
 use DateTime;
 use File::Spec::Functions qw(catfile);
+use List::MoreUtils 'any';
+use POSIX;
 
 =head1 NAME
 
@@ -55,10 +57,27 @@ sub render {
 
     my $outfile = catfile($self->outdir,$label->code . '.pdf');
 
+    my @open_fd = _open_fd();
+
     $self->_begin_doc($label, $outfile, $y_offset);
     $self->_add_elements($label, $y_offset);
     $self->_end_doc($label, $y_offset);
+
+    # tidy-up file descriptors after bug in PDF::Reuse (http://rt.cpan.org/Ticket/Display.html?id=41287)
+    foreach my $fd_num (_open_fd()) {
+        POSIX::close($fd_num)
+            unless any { $_ == $fd_num } @open_fd;
+    }
+
     return $outfile;
+}
+
+sub _open_fd {
+    return (
+        sort
+        map { m{/(\d+)$} ? $1 : () }
+        glob "/proc/$$/fd/*"
+    );
 }
 
 sub _begin_doc {
@@ -90,10 +109,10 @@ sub _add_elements {
         value          => chr(0xf5) . $label->code_barcode
     );
 
-#    my $font_path = $self->template;
-#    $font_path=~s/SlimA6.pdf/MONACO.TTF/;
-#    prTTFont($font_path);
-	prFont('Courier-Bold');
+    my $font_path = $self->template;
+    $font_path=~s/SlimA6.pdf/MONACO.TTF/;
+    prTTFont($font_path);
+#	prFont('Courier-Bold');
     
     # barcode
     prFontSize(9);

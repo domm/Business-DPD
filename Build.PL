@@ -21,6 +21,7 @@ my $builder = Module::Build->new(
         'DBD::SQLite'           => '1.14',
         'DBIx::Class'           => '0.08010',
         'Text::Autoformat'      => '1.13',
+        'List::MoreUtils'       => '0',
     },
     
     add_to_cleanup     => ['Business-DPD-*'],
