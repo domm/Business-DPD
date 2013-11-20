@@ -86,7 +86,7 @@ sub _begin_doc {
     prFile( $outfile );
     prMbox( 0, 0, 258, $y_offset+414 );
     prForm( {
-            file => $self->template,
+            file => $self->template($label),
             page => 1,
             x    => 0,
             y    => $y_offset+0,
@@ -109,8 +109,8 @@ sub _add_elements {
         value          => chr(0xf5) . $label->code_barcode
     );
 
-    my $font_path = $self->template;
-    $font_path=~s/SlimA6.pdf/MONACO.TTF/;
+    my $font_path = $self->template($label);
+    $font_path=~s/SlimA6(-.+)?.pdf/MONACO.TTF/;
     prTTFont($font_path);
 #	prFont('Courier-Bold');
     
@@ -266,7 +266,15 @@ sub _end_doc {
     prEnd();
 }
 
-sub template { shift->inc2pdf(__PACKAGE__) }
+sub template {
+    my ( $self, $label ) = @_;
+    my $depot            = $self->_dpd->schema->resultset('DpdDepot')->find( $label->depot );
+    my $depot_country    = lc($depot->country);
+    my $default_tempate  = $self->inc2pdf(__PACKAGE__);
+    my $country_template = $default_tempate;
+    $country_template =~ s/\.pdf$/-$depot_country.pdf/;
+    return (-f $country_template ? $country_template : $default_tempate);
+}
 
 1;
 
