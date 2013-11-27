@@ -117,7 +117,6 @@ sub file_body {
     foreach my $labels (@sorted_recipient_labels) {
         my $label_header = $labels->[0];
         $label_header->calc_fields unless $label_header->_fields_calculated;
-        my $reference_number_header = $label_header->reference_number // [];
         my $total_weight = sum map { $_->weight_g } @$labels;
 
         #HEADER
@@ -159,7 +158,6 @@ sub file_body {
 
         foreach my $label (@$labels) {
             $label->calc_fields unless $label->_fields_calculated;
-            my $reference_number = $label->reference_number // [];
 
             #PARCEL
             $data .= join(
@@ -167,8 +165,8 @@ sub file_body {
                 'PARCEL',
                 'MPS'.$label->tracking_number_without_checksum.$self->now->strftime('%Y%m%d'),
                 $label->tracking_number_without_checksum,
-                ($label_header->reference_number // ''), # CREF1
-                ($label_header->order_number     // ''), # CREF2
+                ($label->reference_number // ''), # CREF1
+                ($label->order_number     // ''), # CREF2
                 '', # CREF3
                 '', # CREF4
                 $self->delisid, # DELISUSR

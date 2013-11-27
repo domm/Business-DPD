@@ -43,8 +43,8 @@ FILE1_GENERATION: {
         }),
         serial          => '9700001008',
         service_code    => '101',
-        reference_number => [ 'Testpaket' ],
-        weight          => 5, # 5kg
+        reference_number => 'Testpaket',
+        weight_g        => 5000, # 5kg
 
     });
     my $mpsexpdata = Business::DPD::DataExchange::mpsexpdata->new({
@@ -84,9 +84,8 @@ FILE2_GENERATION: {
         service_code    => '101',
         shipment_count_this => 1,
         shipment_count_total => 2,
-        reference_number => [ 'Testpaket' ],
-        weight          => 5, # 5kg
-
+        reference_number => 'Testpaket',
+        weight_g    => 5000, # 5kg
     });
     my $label2 = Business::DPD::Label->new( $dpd, {
         address => Business::DPD::Address->new($dpd, {
@@ -101,8 +100,8 @@ FILE2_GENERATION: {
         service_code    => '101',
         shipment_count_this => 2,
         shipment_count_total => 2,
-        reference_number => [ 'Testpaket2' ],
-        weight          => 6, # 6kg
+        reference_number => 'Testpaket2',
+        weight_g    => 6000, # 6kg
 
     });
     my $label3 = Business::DPD::Label->new( $dpd, {
@@ -118,8 +117,8 @@ FILE2_GENERATION: {
         service_code    => '101',
         shipment_count_this => 1,
         shipment_count_total => 1,
-        reference_number => [ 'Testpaket3' ],
-        weight          => 1, # 1kg
+        reference_number => 'Testpaket3',
+        weight_g    => 1000, # 1kg
 
     });
     my $mpsexpdata = Business::DPD::DataExchange::mpsexpdata->new({
