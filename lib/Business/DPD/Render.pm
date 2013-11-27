@@ -42,10 +42,19 @@ You should really use a subclass of this module!
         originator => ['some','lines','of text'],
     });
 
+C<originator> will be automatically populated if
+C<$dpd> C<originator_address> is set.
+
 =cut
 
 sub new {
     my ($class, $dpd, $opts) = @_;
+
+    if ($dpd->originator_address) {
+        $opts->{originator} //= [
+            $dpd->originator_address->as_array
+        ];
+    }
 
     my $self = bless $opts, $class;
     $self->_dpd($dpd);

@@ -10,8 +10,9 @@ use parent qw(Class::Accessor::Fast);
 use Business::DPD::DBIC;
 use Business::DPD::Label;
 use Carp;
+use Scalar::Util 'weaken';
 
-__PACKAGE__->mk_accessors(qw(schema schema_class dbi_connect _iso7064_mod37_36_checksum_map));
+__PACKAGE__->mk_accessors(qw(schema schema_class dbi_connect _iso7064_mod37_36_checksum_map originator_address));
 
 =head1 NAME
 
@@ -20,8 +21,8 @@ Business::DPD - handle DPD label generation
 =head1 SYNOPSIS
 
     use Business::DPD;
-    my $dpd = Business::DPD->new;
-    $dpd->connect_schema; 
+    my $dpd = Business::DPD->new();
+    $dpd->connect_schema;
     my $label = $dpd->generate_label({
         zip             => '12555',
         country         => 'DE',
@@ -32,6 +33,27 @@ Business::DPD - handle DPD label generation
     say $label->tracking_number;
     say $label->d_sort;
 
+    use Business::DPD;
+    my $dpd = Business::DPD->new();
+    $dpd->connect_schema;
+    $dpd->set_originator_address({
+        name1   => 'DELICom DPD GmbH',
+        street  => 'Wailandtstrasse 1',
+        postal  => '63741',
+        city    => 'Aschaffenburg',
+        country => 'DE',
+        phone   => '06021/ 0815',
+        fax     => '06021/ 0816',
+        email   => 'test.dpd@dpd.com',
+        depot   => '0176',
+    }));
+    my $label = $dpd->generate_label({
+        address         => Business::DPD::Address->new($dpd,{ ... });
+        serial          => '5012345678',
+        service_code    => '101',
+    });
+    say $label->tracking_number;
+    say $label->d_sort;
 
 =head1 DESCRIPTION
 
@@ -148,6 +170,30 @@ sub iso7064_mod37_36_checksum_map {
     }
     $self->_iso7064_mod37_36_checksum_map(\%map);
     return (\%map,\@chars);
+}
+
+=head3 country_code
+
+    my $country_num = $dpd->country_code('DE');
+
+=cut
+
+sub country_code {
+    my ($self, $country) = @_;
+    my $c = $self->schema->resultset('DpdCountry')->search({ alpha2 => $country })->first;
+    croak 'country "'.$country.'" not found' unless $c;
+    return $c->num;
+}
+
+sub set_originator_address {
+    my ($self, $options) = @_;
+    $self->originator_address(Business::DPD::Address->new(
+        $self,
+        $options,
+    ));
+
+    # prevent circular reference
+    weaken($self->originator_address->{_dpd});
 }
 
 1;

@@ -8,12 +8,13 @@ use version; our $VERSION = version->new('0.22');
 
 use parent qw(Class::Accessor::Fast);
 use Carp;
+use POSIX 'ceil';
 
 # input data
-__PACKAGE__->mk_accessors(qw(zip country depot serial service_code));
+__PACKAGE__->mk_accessors(qw(zip country depot serial service_code address));
 
 # more input data
-__PACKAGE__->mk_accessors(qw(weight shipment_count_this shipment_count_total recipient reference_number order_number));
+__PACKAGE__->mk_accessors(qw(weight weight_g shipment_count_this shipment_count_total recipient reference_number order_number));
 
 
 # calculated values
@@ -55,11 +56,29 @@ Business::DPD::Label - one DPD label
         depot           => '1090',
         serial          => '50123456%0878',
         service_code    => '101',    
+        weight          => '6 kg',
     });
     $label->calc_fields;
     say $label->tracking_number;
     say $label->d_sort;
 
+    use Business::DPD::Label;
+    my $label2 = Business::DPD::Label->new( $dpd, {
+        address => Business::DPD::Address->new($dpd, {
+            name1   => 'Hans Mustermann GmbH',
+            street  => 'Musterstr. 12a',
+            postal  => '63741',
+            city    => 'Aschaffenburg',
+            country => 'DE',
+            phone   => '06021/112',
+        }),
+        serial          => '9700001010',
+        service_code    => '101',
+        shipment_count_this => 1,
+        shipment_count_total => 2,
+        reference_number => [ 'Testpaket2' ],
+        weight_g        => 6000,
+    });
 
 =head1 DESCRIPTION
 
@@ -87,6 +106,16 @@ TODO?: take a Business::DPD::Address as an agrument (instead of zip & country)
 
 sub new {
     my ($class, $dpd, $opts) = @_;
+
+    if (my $address = $opts->{address}) {
+        $opts->{zip} //= $address->postal;
+        $opts->{country} //= $address->country;
+        $opts->{recipient} //= [ $address->as_array ];
+    }
+    $opts->{depot} //= ($dpd->originator_address ? $dpd->originator_address->depot : undef);
+    if (my $weight_g = $opts->{weight_g}) {
+        $opts->{weight} = (ceil($weight_g/10)/100).' kg';
+    }
 
     # check required params
     my @missing;
@@ -209,10 +238,7 @@ into C<target_country_code>
 
 sub calc_target_country_code {
     my $self = shift;
-    my $schema = $self->_dpd->schema;
-    
-    my $c = $schema->resultset('DpdCountry')->search({ alpha2 => $self->country })->first; 
-    $self->target_country_code($c->num);
+    $self->target_country_code($self->_dpd->country_code($self->country));
 }
 
 
