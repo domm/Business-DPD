@@ -104,9 +104,9 @@ sub _add_elements {
         mode           => 'graphic',
         x              => 8,
         text           => 0,
-        ySize          => 4.4,
+        ySize          => 4.6,
         xSize          => 1,
-        y              => $y_offset-22,
+        y              => $y_offset-25,
         drawBackground => 0,
         value          => chr(0xf5) . $label->code_barcode
     );
@@ -118,7 +118,7 @@ sub _add_elements {
     
     # Barcode field
     prFontSize(9);
-    prText( 126, $y_offset+8, $label->code_human, 'center' );
+    prText( 126, $y_offset+6, $label->code_human, 'center' );
 
     # tracking number (inside Route field, above "Track" label)
     prFontSize(26);
@@ -137,7 +137,7 @@ sub _add_elements {
     my $now = DateTime->now;
     prText(
         126,
-        $y_offset+109,
+        $y_offset+111,
         join('; ',
             $now->strftime('%F %H:%M'),
             $self->_dpd->schema->resultset('DpdMeta')->search()->first->version,
@@ -154,8 +154,8 @@ sub _add_elements {
 
     # Outbound-Sort, Destination-Sort (inside Route field, around Servicecode-Country-RecipientZIP)
     prFontSize(19);
-    prText( 20, $y_offset+109, $label->o_sort );
-    prText( 237, $y_offset+109, $label->d_sort, 'right' );
+    prText( 20, $y_offset+111, $label->o_sort );
+    prText( 237, $y_offset+111, $label->d_sort, 'right' );
 
     # Destination text (inside Route field, below Track and Service label)
     if ( $label->route_code ) {
