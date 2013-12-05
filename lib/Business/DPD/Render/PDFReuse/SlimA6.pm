@@ -104,9 +104,9 @@ sub _add_elements {
         mode           => 'graphic',
         x              => 8,
         text           => 0,
-        ySize          => 3,
+        ySize          => 4.4,
         xSize          => 1,
-        y              => $y_offset-5,
+        y              => $y_offset-22,
         drawBackground => 0,
         value          => chr(0xf5) . $label->code_barcode
     );
@@ -116,11 +116,11 @@ sub _add_elements {
     prTTFont($font_path);
 #	prFont('Courier-Bold');
     
-    # barcode
+    # Barcode field
     prFontSize(9);
     prText( 126, $y_offset+8, $label->code_human, 'center' );
 
-    # tracking number
+    # tracking number (inside Route field, above "Track" label)
     prFontSize(26);
     prText( 8, $y_offset+168, $label->depot );
     prFontSize(16);
@@ -128,16 +128,16 @@ sub _add_elements {
     prFontSize(12);
     prText( 170, $y_offset+168, $label->checksum_tracking_number );
 
-    # Service
+    # Service (inside Route field, above "Service" label)
     prFontSize(16);
     prText( 253, $y_offset+168, $label->service_text, 'right' );
 
-    # Label-Ursprug
+    # Label-Origin (inside Route field, above barcode)
     prFontSize(4);
     my $now = DateTime->now;
     prText(
         126,
-        $y_offset+85,
+        $y_offset+109,
         join('; ',
             $now->strftime('%F %H:%M'),
             $self->_dpd->schema->resultset('DpdMeta')->search()->first->version,
@@ -146,21 +146,23 @@ sub _add_elements {
         'center'
     );
 
-    # Servicecode-Land-EmpfaengerPLZ
+    # Servicecode-Country-RecipientZIP  (inside Route field, above Label-Origin)
     prFontSize(9);
-    prText( 126, $y_offset+94,
+    prText( 126, $y_offset+116,
         join( '-', $label->service_code, $label->country, $label->zip ),
         'center' );
 
-    # routing
-    prFontSize(28);
-    prText( 20, $y_offset+91, $label->o_sort );
-    prText( 237, $y_offset+91, $label->d_sort, 'right' );
+    # Outbound-Sort, Destination-Sort (inside Route field, around Servicecode-Country-RecipientZIP)
+    prFontSize(19);
+    prText( 20, $y_offset+109, $label->o_sort );
+    prText( 237, $y_offset+109, $label->d_sort, 'right' );
+
+    # Destination text (inside Route field, below Track and Service label)
     if ( $label->route_code ) {
-        prFontSize(34);
+        prFontSize(30);
         prText(
             126,
-            $y_offset+126,
+            $y_offset+128,
             $label->country . '-'
                 . $label->d_depot . '-'
                 . $label->route_code,
@@ -168,8 +170,8 @@ sub _add_elements {
         );
     }
     else {
-        prFontSize(40);
-        prText( 126, $y_offset+126, $label->country . '-' . $label->d_depot, 'center' );
+        prFontSize(38);
+        prText( 126, $y_offset+128, $label->country . '-' . $label->d_depot, 'center' );
     }
 
     # depot info
