@@ -193,6 +193,43 @@ sub file_body {
 
 sub _new_line { return "\r\n" }
 
+sub parse_to_data {
+    my ($self, $mpsexpdata) = @_;
+    my @lines = split(/\v+/, $mpsexpdata);
+
+    my %defs;
+    my @mpsexpdata;
+    while (my $line = shift @lines) {
+        my @cols = split(/;/,$line);
+        my $directive = shift(@cols);
+        next if $directive eq '#FILE';
+        next if $directive eq '#END';
+        if ($directive eq '#DEF') {
+            my $def_long_name = shift(@cols);
+            die 'unknown #DEF '.$def_long_name
+                unless $def_long_name =~ m/^MPSEXP:(.+)/;
+            my $def_name = $1;
+            $defs{$def_name} = \@cols;
+            next;
+        }
+        elsif ($defs{$directive}) {
+            my %attrs;
+            foreach my $i (0..@{$defs{$directive}}-1) {
+                $attrs{$defs{$directive}->[$i]} = $cols[$i] // '';
+            };
+            push(@mpsexpdata,{
+                type => $directive,
+                attrs => \%attrs,
+            });
+        }
+        else {
+            die 'unknown line '.$line;
+        }
+    }
+
+    return @mpsexpdata;
+}
+
 1;
 
 __END__
@@ -215,6 +252,10 @@ Business::DPD::DataExchange::mpsexpdata - generate MPSEXPDATA - batch file
     say $mpsexpdata->filename;
     say $mpsexpdata->as_string;
 
+    say Data::Dumper::Dumper([
+        Business::DPD::DataExchange::mpsexpdata->parse_to_data()
+    ]);
+
 =head1 DESCRIPTION
 
 Generates MPSEXPDATA file that can be send to DPD.
@@ -236,6 +277,10 @@ Ex.: C<MPSEXPDATA_DelisID_CUST_0176_D20061123T154215>
 
 Returns content of MPSEXPDATA file that includes all labels composed
 from C<file_header()> + C<file_body()> + C<file_footer()>
+
+=head3 parse_to_data
+
+Takes string with mpsexpdata file content and parses it to data structure.
 
 =head1 AUTHOR
 

@@ -4,7 +4,7 @@ Revision history for Perl extension Business::DPD
     - using TTF-File again because utf8 characters don't work the other way
       closing file descriptors that remains open due to bug in PDF::Reuse
       (http://rt.cpan.org/Ticket/Display.html?id=41287)
-    - add Business::DPD::DataExchange::mpsexpdata (for MPSEXDATA file generation)
+    - add Business::DPD::DataExchange::mpsexpdata (for MPSEXDATA file generation and parsing)
     - add Business::DPD::Address (for DPD addresses handling)
 
 0.21   2009-02-13 12:10:26
