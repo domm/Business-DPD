@@ -147,7 +147,7 @@ sub file_body {
             '', #CDATE
             '', #CTIME
             '', #CUSER
-            'P', #HARDWARE
+            'K', #HARDWARE
             '', #RDEPOT
             '', #ESORT
             '', #RCUSTID
@@ -169,7 +169,7 @@ sub file_body {
             $data .= join(
                 ';',
                 'PARCEL',
-                'MPS'.$label->tracking_number_without_checksum.$self->now->strftime('%Y%m%d'),
+                'MPS'.$label_header->tracking_number_without_checksum.$self->now->strftime('%Y%m%d'), # same as header for all packages
                 $label->tracking_number_without_checksum,
                 ($label->reference_number // ''), # CREF1
                 ($label->order_number     // ''), # CREF2
