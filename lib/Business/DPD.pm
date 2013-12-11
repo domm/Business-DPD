@@ -185,6 +185,34 @@ sub country_code {
     return $c->num;
 }
 
+=head3 country_alpha2
+
+    my $country = $dpd->country_alpha2(276);
+
+=cut
+
+sub country_alpha2 {
+    my ($self, $country_num) = @_;
+    my $c = $self->schema->resultset('DpdCountry')->search({ num => $country_num })->first;
+    croak 'country "'.$country_num.'" not found' unless $c;
+    return $c->alpha2;
+}
+
+=head3 routing_meta
+
+    my $routing_version = $dpd->routing_meta->version;
+
+Returns L<Business::DPD::DBIC::Schema::DpdMeta> object.
+
+=cut
+
+sub routing_meta {
+    my ($self) = @_;
+    my $meta = $self->schema->resultset('DpdMeta')->search({})->single;
+    croak 'no meta!' unless $meta;
+    return $meta;
+}
+
 sub set_originator_address {
     my ($self, $options) = @_;
     $self->originator_address(Business::DPD::Address->new(
