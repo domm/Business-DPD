@@ -251,10 +251,11 @@ Returns the service text for the given service code
 =cut
 
 sub service_text {
-    my ($self) = @_;
+    my ($self, $code) = @_;
     
-    return $SERVICE_TEXT{$self->service_code}
-        if defined $SERVICE_TEXT{$self->service_code};
+    $code //= $self->service_code;
+    return $SERVICE_TEXT{$code}
+        if defined $SERVICE_TEXT{$code};
     
     return;  
 }
