@@ -11,6 +11,7 @@ use Business::DPD::DBIC;
 use Business::DPD::Label;
 use Carp;
 use Scalar::Util 'weaken';
+use DateTime;
 
 __PACKAGE__->mk_accessors(qw(schema schema_class dbi_connect _iso7064_mod37_36_checksum_map originator_address));
 
@@ -112,6 +113,12 @@ sub connect_schema {
     my $schema = $self->schema_class->connect(@{$self->dbi_connect});
     $self->schema($schema);
 
+    unless ($ENV{HARNESS_ACTIVE}) {
+        my $expires = $self->routing_meta->expires;
+        my $today   = DateTime->now()->strftime('%Y%m%d');
+        warn 'your DPD routing database is outdated since '.$expires
+            if $expires < $today;
+    }
 }
 
 =head3 generate_label
@@ -227,6 +234,21 @@ sub set_originator_address {
 1;
 
 __END__
+
+=head1 TO GENERATE DPD ROUTE DATABASE
+
+    cd Business-DPD
+    mkdir route-db
+    cd route-db
+    wget https://www.dpdportal.sk/download/routing_tables/rlatest_rev_dpdshipper_legacy.zip
+    unzip rlatest_rev_dpdshipper_legacy.zip
+    cd ..
+    rm -f lib/Business/DPD/dpd.sqlite
+    perl -Ilib helper/generate_sqlite_db.pl
+    perl -Ilib helper/import_dpd_data.pl route-db/
+    perl Build.PL
+    perl Build test
+    sudo perl Build install
 
 =head1 AUTHOR
 
