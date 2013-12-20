@@ -7,6 +7,7 @@ Revision history for Perl extension Business::DPD
     - add Business::DPD::DataExchange::mpsexpdata (for MPSEXDATA file generation and parsing)
     - add Business::DPD::Address (for DPD addresses handling)
     - add Business::DPD country_alpha2() and routing_meta() functions
+    - add Business::DPD::Parcel get status of a parcel
 
 0.21   2009-02-13 12:10:26
     - Improve rendering to stick closer to official UPS-Label spec

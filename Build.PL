@@ -24,6 +24,11 @@ my $builder = Module::Build->new(
         'Text::Autoformat'      => '1.13',
         'List::MoreUtils'       => '0',
         'Path::Class'           => 0,
+        'URI'                   => 0,
+        'LWP::UserAgent'        => 0,
+        'Web::Scraper'          => 0,
+        'HTML::Entities'        => 0,
+        'DateTime::Format::Strptime' => 0,
     },
     
     add_to_cleanup     => ['Business-DPD-*'],
