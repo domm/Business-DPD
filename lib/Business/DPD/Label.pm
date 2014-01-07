@@ -197,10 +197,11 @@ sub calc_routing {
     my $self = shift;
     my $schema = $self->_dpd->schema;
 
+    my $zip = $self->_zip_for_calc;
     my $route_rs = $schema->resultset('DpdRoute')->search({
         'me.dest_country'=>$self->country,
-        'me.begin_postcode' => { '<=' => $self->zip },
-        'me.end_postcode' => { '>=' => $self->zip },
+        'me.begin_postcode' => { '<=' => $zip },
+        'me.end_postcode' => { '>=' => $zip },
     },
     {
         order_by=>'me.begin_postcode DESC',
@@ -301,12 +302,20 @@ And here's the explanation of those strange letter:
 sub calc_barcode {
     my $self = shift;
 
-    my $cleartext = sprintf("%07d",$self->zip) .  $self->tracking_number_without_checksum . $self->service_code . $self->target_country_code;
+    my $cleartext = sprintf("%07s",$self->_zip_for_calc) .  $self->tracking_number_without_checksum . $self->service_code . $self->target_country_code;
     my $checksum = $self->_dpd->iso7064_mod37_36_checksum($cleartext);
 
     $self->code($cleartext);
     $self->code_human($cleartext . $checksum);
     $self->code_barcode(chr($self->barcode_id) . $cleartext);
+}
+
+# clean-up zip code for route calculation (most countries has just numbers, GB has also letters)
+sub _zip_for_calc {
+    my $self = shift;
+    my $zip = uc($self->zip);
+    $zip =~ s/[^0-9a-zA-Z]//g;
+    return $zip;
 }
 
 =head1 TODO
