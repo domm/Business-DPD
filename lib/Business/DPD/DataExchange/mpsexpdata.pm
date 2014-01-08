@@ -19,7 +19,7 @@ __PACKAGE__->mk_accessors(qw(
     customer_subid
     labels
 
-    packet_count
+    parcel_count
 
     pickup_time_from
     pickup_time_to
@@ -43,7 +43,7 @@ sub new {
     croak "required option ".join(',',map{"'$_'"}@missing)." missing" if @missing;
 
     $opts->{now} //= DateTime->now('time_zone' => 'local');
-    $opts->{packet_count} //= 0;
+    $opts->{parcel_count} //= 0;
 
     # validata some params
     croak "'lables' must be an array" unless ref $opts->{labels} eq 'ARRAY';
@@ -109,7 +109,7 @@ sub file_footer {
             $self->pickup_originator_address->as_mpsexpdata(), # PNAME1, PNAME2, PSTREET, PHOUSENO, PCOUNTRYN, PPOSTAL, PCITY, PCONTACT, PPHONE, PFAX, PEMAIL, PILN
             $self->pickup_time_from->strftime('%Y%m%d'), # PDATE
             '', # PTOUR
-            $self->packet_count, # PQUANTITY
+            $self->parcel_count, # PQUANTITY
             $self->pickup_time_from->strftime('%w'), # PDAY
             $self->pickup_time_from->strftime('%H%M'), # PFROMTIME1
             $self->pickup_time_to->strftime('%H%M'), # PTOTIME1
@@ -219,7 +219,7 @@ sub file_body {
                 $_new_line,
             );
 
-            $self->packet_count($self->packet_count+1);
+            $self->parcel_count($self->parcel_count+1);
         }
     }
 
