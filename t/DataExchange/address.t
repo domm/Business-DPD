@@ -30,14 +30,14 @@ my $address = Business::DPD::Address->new($dpd, {
     comment => '',
 });
 is(
-    $address->as_mpsexpdata,
+    $address->as_mpsexpdata(comment => 1),
     'DELICom DPD GmbH;;Wailandtstrasse 1;;276;63741;Aschaffenburg;;06021/ 0815;06021/ 0816;test.dpd@dpd.com;;',
-    'as_mpsexpdata()'
+    'as_mpsexpdata(comment => 1)'
 );
 is(
-    $address->as_mpsexpdata(state => 1),
+    $address->as_mpsexpdata(state => 1, comment => 1),
     'DELICom DPD GmbH;;Wailandtstrasse 1;;276;state;63741;Aschaffenburg;;06021/ 0815;06021/ 0816;test.dpd@dpd.com;;',
-    'as_mpsexpdata(state => 1)'
+    'as_mpsexpdata(state => 1, comment => 1)'
 );
 
 done_testing;

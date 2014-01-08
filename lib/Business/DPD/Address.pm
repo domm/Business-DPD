@@ -72,7 +72,9 @@ sub as_mpsexpdata {
             phone
             fax
             email
-            comment
+        ),
+        ($opt{comment} ? 'comment' : ()),
+        qw(
             iln
         )
     );

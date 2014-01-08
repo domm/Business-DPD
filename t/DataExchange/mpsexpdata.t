@@ -135,6 +135,20 @@ FILE2_GENERATION: {
             minute => 42,
             second => 15,
         ),
+        pickup_time_from => DateTime->new(
+            year   => 2006,
+            month  => 11,
+            day    => 25,
+            hour   =>  9,
+            minute =>  5,
+        ),
+        pickup_time_to => DateTime->new(
+            year   => 2006,
+            month  => 11,
+            day    => 25,
+            hour   => 14,
+            minute => 10,
+        ),
     });
     is($mpsexpdata->filename,$mpsexpdata_multi, 'filename()');
     eq_or_diff_lines(
@@ -146,7 +160,7 @@ FILE2_GENERATION: {
 
 FILE2_PARSING: {
     my @data = Business::DPD::DataExchange::mpsexpdata->parse_to_data(''.file($Bin,$mpsexpdata_multi)->slurp);
-    is_deeply(
+    eq_or_diff(
         \@data,
         [
           {
@@ -325,6 +339,33 @@ FILE2_PARSING: {
                          'HINSCURRENCY' => '',
                          'HINSCONTENT' => '',
                        }
+          },
+          {
+            'type' => 'PICKUP',
+            'attrs' => {
+                         MPSID => 'MPS0176970000101120061124',
+                         PTYPE => '1',
+                         PNAME1 => 'DELICom DPD GmbH',
+                         PNAME2 => '',
+                         PSTREET => 'Wailandtstrasse 1',
+                         PHOUSENO => '',
+                         PCOUNTRYN => '276',
+                         PPOSTAL => '63741',
+                         PCITY => 'Aschaffenburg',
+                         PCONTACT => '',
+                         PPHONE => '06021/ 0815',
+                         PFAX => '06021/ 0816',
+                         PEMAIL => 'test.dpd@dpd.com',
+                         PILN => '',
+                         PDATE => '20061125',
+                         PTOUR => '',
+                         PQUANTITY => '3',
+                         PDAY => '6',
+                         PFROMTIME1 => '0905',
+                         PTOTIME1 => '1410',
+                         PFROMTIME2 => '',
+                         PTOTIME2 => '',
+                       },
           }
         ],
         'parse_to_data()',

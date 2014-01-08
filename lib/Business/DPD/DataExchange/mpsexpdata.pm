@@ -18,7 +18,13 @@ __PACKAGE__->mk_accessors(qw(
     customer_id
     customer_subid
     labels
-    pickup_address
+
+    packet_count
+
+    pickup_time_from
+    pickup_time_to
+    pickup_mpsid
+    pickup_originator_address
 ));
 
 # internal
@@ -37,6 +43,7 @@ sub new {
     croak "required option ".join(',',map{"'$_'"}@missing)." missing" if @missing;
 
     $opts->{now} //= DateTime->now('time_zone' => 'local');
+    $opts->{packet_count} //= 0;
 
     # validata some params
     croak "'lables' must be an array" unless ref $opts->{labels} eq 'ARRAY';
@@ -82,8 +89,8 @@ sub file_header {
     );
     $data .= '#DEF;MPSEXP:HEADER;MPSID;MPSCOMP;MPSCOMPLBL;MPSCREF1;MPSCREF2;MPSCREF3;MPSCREF4;MPSCOUNT;MPSVOLUME;MPSWEIGHT;SDEPOT;SCUSTID;SCUSTSUBID;DELISUSR;SNAME1;SNAME2;SSTREET;SHOUSENO;SCOUNTRYN;SPOSTAL;SCITY;SCONTACT;SPHONE;SFAX;SEMAIL;SCOMMENT;SILN;CDATE;CTIME;CUSER;HARDWARE;RDEPOT;ESORT;RCUSTID;RNAME1;RNAME2;RSTREET;RHOUSENO;RCOUNTRYN;RSTATE;RPOSTAL;RCITY;RCONTACT;RPHONE;RFAX;REMAIL;RCOMMENT;RILN;MPSSERVICE;MPSSDATE;MPSSTIME;LATEPICKUP;UMVER;UMVERREF;PODMAN;;'.$_new_line;
     $data .= '#DEF;MPSEXP:PARCEL;MPSID;PARCELNO;CREF1;CREF2;CREF3;CREF4;DELISUSR;SERVICE;VOLUME;WEIGHT;HINSURE;HINSAMOUNT;HINSCURRENCY;HINSCONTENT;;'.$_new_line;
-    if ($self->pickup_address) {
-        $data .= '#DEF;MPSEXP:PICKUP;MPSID;PTYPE;PNAME1;PNAME2;PSTREET;PHOUSENO;PCOUNTRYN;PPOSTAL;PCITY;PCONTACT;PPHONE;PFAX;PEMAIL;PILN;PDATE;PTOUR;PQUANTITY;PDAY;PFROMTIME1;PTOTIME1;PFROMTIME2;PTOTIME2;;';
+    if ($self->pickup_time_from && $self->pickup_time_to) {
+        $data .= '#DEF;MPSEXP:PICKUP;MPSID;PTYPE;PNAME1;PNAME2;PSTREET;PHOUSENO;PCOUNTRYN;PPOSTAL;PCITY;PCONTACT;PPHONE;PFAX;PEMAIL;PILN;PDATE;PTOUR;PQUANTITY;PDAY;PFROMTIME1;PTOTIME1;PFROMTIME2;PTOTIME2;;'.$_new_line;
     }
 
     return $data;
@@ -91,12 +98,35 @@ sub file_header {
 sub file_footer {
     my ($self) = @_;
 
-    return join(
+    my $data = '';
+    if ($self->pickup_time_from && $self->pickup_time_to) {
+        #PICKUP
+        $data .= join(
+            ';',
+            'PICKUP',
+            $self->pickup_mpsid, # MPSID
+            '1', # PTYPE
+            $self->pickup_originator_address->as_mpsexpdata(), # PNAME1, PNAME2, PSTREET, PHOUSENO, PCOUNTRYN, PPOSTAL, PCITY, PCONTACT, PPHONE, PFAX, PEMAIL, PILN
+            $self->pickup_time_from->strftime('%Y%m%d'), # PDATE
+            '', # PTOUR
+            $self->packet_count, # PQUANTITY
+            $self->pickup_time_from->strftime('%w'), # PDAY
+            $self->pickup_time_from->strftime('%H%M'), # PFROMTIME1
+            $self->pickup_time_to->strftime('%H%M'), # PTOTIME1
+            '', # PFROMTIME2
+            '', # PTOTIME2
+            $_new_line,
+        );
+    }
+
+    $data .= join(
         ';',
         '#END',
         $self->consecutive_no,
         $_new_line,
     );
+
+    return $data;
 }
 
 sub file_body {
@@ -107,7 +137,7 @@ sub file_body {
     # group labels by recipient
     my %labels_per_recipient;
     foreach my $label (sort { $a->serial cmp $b->serial } @{$self->labels}) {
-        my $recipient = $label->address->as_mpsexpdata(state => 1);
+        my $recipient = $label->address->as_mpsexpdata(state => 1, comment => 1);
         $labels_per_recipient{$recipient} //= [];
         push(@{$labels_per_recipient{$recipient}}, $label);
     }
@@ -124,12 +154,15 @@ sub file_body {
         my $label_header = $labels->[0];
         $label_header->calc_fields unless $label_header->_fields_calculated;
         my $total_weight = sum map { $_->weight_g } @$labels;
+        my $mpsid = 'MPS'.$label_header->tracking_number_without_checksum.$self->now->strftime('%Y%m%d');
+        $self->pickup_mpsid($mpsid);
+        $self->pickup_originator_address($label_header->_dpd->originator_address);
 
         #HEADER
         $data .= join(
             ';',
             'HEADER',
-            'MPS'.$label_header->tracking_number_without_checksum.$self->now->strftime('%Y%m%d'),
+            $mpsid,
             '1', # MPSCOMP
             '0', # MPSCOMPLBL
             ($label_header->reference_number // ''), # MPSCREF1
@@ -143,7 +176,7 @@ sub file_body {
             $self->customer_id, # SCUSTID
             $self->customer_subid, #SCUSTSUBID
             $self->delisid, # DELISUSR
-            $label_header->_dpd->originator_address->as_mpsexpdata, #SNAME1 - SILN
+            $label_header->_dpd->originator_address->as_mpsexpdata(comment => 1), #SNAME1 - SILN
             '', #CDATE
             '', #CTIME
             '', #CUSER
@@ -151,7 +184,7 @@ sub file_body {
             '', #RDEPOT
             '', #ESORT
             '', #RCUSTID
-            $label_header->address->as_mpsexpdata(state => 1), #RNAME1 - RILN
+            $label_header->address->as_mpsexpdata(state => 1, comment => 1), #RNAME1 - RILN
             $label_header->service_code, #MPSSERVICE
             '', #MPSSDATE
             '', #MPSSTIME
@@ -169,7 +202,7 @@ sub file_body {
             $data .= join(
                 ';',
                 'PARCEL',
-                'MPS'.$label_header->tracking_number_without_checksum.$self->now->strftime('%Y%m%d'), # same as header for all packages
+                $mpsid, # same as header for all packages
                 $label->tracking_number_without_checksum,
                 ($label->reference_number // ''), # CREF1
                 ($label->order_number     // ''), # CREF2
@@ -185,6 +218,8 @@ sub file_body {
                 '', #HINSCONTENT
                 $_new_line,
             );
+
+            $self->packet_count($self->packet_count+1);
         }
     }
 
