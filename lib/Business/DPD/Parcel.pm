@@ -20,6 +20,7 @@ use DateTime::Format::Strptime;
 __PACKAGE__->mk_accessors(qw(
     tracking_number
     ua
+    exists
 ));
 
 # internal
@@ -108,6 +109,8 @@ sub dpd_extranet_data {
         pattern   => '%m/%d/%Y %H:%M',
         time_zone => 'Europe/Vienna',
     );
+    my @dpd_places = @{$parcel_scraper->scrape($self->dpd_extranet_page, $self->dpd_extranet_link)->{places} // []};
+    $self->exists(scalar @dpd_places);
     my @rows =
         # cells to hash
         map {
@@ -144,7 +147,7 @@ sub dpd_extranet_data {
         grep { @{$_} == 6 }
         grep { ref($_) eq 'ARRAY' }
         map { $_->{columns} }
-        @{$parcel_scraper->scrape($self->dpd_extranet_page, $self->dpd_extranet_link)->{places}};
+        @dpd_places;
 
     $parcel{places} = \@rows;
 
