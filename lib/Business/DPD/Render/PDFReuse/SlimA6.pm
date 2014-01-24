@@ -102,7 +102,7 @@ sub _add_elements {
     
     PDF::Reuse::Barcode::Code128(
         mode           => 'graphic',
-        x              => 8,
+        x              => 0,
         text           => 0,
         ySize          => 4.6,
         xSize          => 1,
