@@ -40,4 +40,23 @@ is(
     'as_mpsexpdata(state => 1, comment => 1)'
 );
 
+my $address2 = Business::DPD::Address->new($dpd, {
+    name1 => 'DELICom DPD GmbH',
+    street => 'Nowiny 79A',
+    houseno => '',
+    country => 'PL',
+    postal => '20 - 515',
+    city => 'Lublin',
+    contact => '',
+    phone => '',
+    fax => '',
+    email => 'test2.dpd@dpd.com',
+    comment => '',
+});
+is(
+    $address2->as_mpsexpdata(comment => 1),
+    'DELICom DPD GmbH;;Nowiny 79A;;616;20515;Lublin;;;;test2.dpd@dpd.com;;',
+    'as_mpsexpdata(comment => 1)'
+);
+
 done_testing;

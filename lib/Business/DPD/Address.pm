@@ -54,6 +54,13 @@ sub _countryn {
     return $self->_dpd->country_code($self->country)
 }
 
+sub postal_mpsexpdata {
+    my ($self) = @_;
+    my $postal = $self->postal;
+    $postal =~ s/[\-\s]//g;
+    return $postal;
+}
+
 sub as_mpsexpdata {
     my ($self, %opt) = @_;
     my @address_components = (
@@ -66,7 +73,7 @@ sub as_mpsexpdata {
         ),
         ($opt{state} ? 'state' : ()),
         qw(
-            postal
+            postal_mpsexpdata
             city
             contact
             phone
