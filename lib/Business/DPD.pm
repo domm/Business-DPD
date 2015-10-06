@@ -189,7 +189,7 @@ sub country_code {
     my ($self, $country) = @_;
     my $c = $self->schema->resultset('DpdCountry')->search({ alpha2 => $country })->first;
     croak 'country "'.$country.'" not found' unless $c;
-    return $c->num;
+    return sprintf("%03d",$c->num);
 }
 
 =head3 country_alpha2
