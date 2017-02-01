@@ -16,7 +16,7 @@ Business::DPD::DBIC - DBIc::Class Interface to DPD data
 =head1 SYNOPSIS
 
   use Business::DPD::DBIC;
-  
+
   my $sqlite_file = Business::DPD::DBIC->path_to_sqlite
 
 =head1 DESCRIPTION
@@ -37,8 +37,8 @@ A DBIx::Class based interface to various data sources needed to generate DPD lab
         connect  => [ DBI connect info ]
     });
 
-Parses the plain text database provided by DPD and stores it into the 
-database used by Business::DPD (which defaults to the build-in sqlite 
+Parses the plain text database provided by DPD and stores it into the
+database used by Business::DPD (which defaults to the build-in sqlite
 DB)
 
 =cut
@@ -58,7 +58,7 @@ sub import_data_into_sqlite {
     croak $@ if $@;
 
     my $schema = $opts->{schema}->connect( @{ $opts->{connect} } );
-    
+
     $class->import_data($schema, $opts);
 }
 
@@ -69,7 +69,7 @@ sub import_data_into_sqlite {
         source  => '/path/to/data',
     });
 
-Import the plain text data into the <$schema>. Usefull if you want to 
+Import the plain text data into the <$schema>. Useful if you want to
 embed the DB into your own database.
 
 =cut
@@ -145,7 +145,7 @@ sub _import_routes {
                 qw(dest_country begin_postcode end_postcode service_code routing_places sending_date o_sort d_depot grouping_priority d_sort barcode_id)
                 } = @data[ 0 .. 10 ];
             $to_create{end_postcode} ||= $to_create{begin_postcode};
-    
+
             push( @routes, \%to_create );
         }
     );
@@ -187,7 +187,7 @@ sub _import_meta {
     my $dbfile = catfile( $dir, 'COUNTRY' );
     open( my $fh, "<", $dbfile )
         || croak "Cannot read from COUNTRY = $dbfile: $!";
-    
+
     my %data;
     foreach my $line (<$fh>) {
         last unless $line =~/^#/;
@@ -196,7 +196,7 @@ sub _import_meta {
         $data{lc($1)}=$2;
     }
     close($fh);
-    
+
     $schema->resultset('DpdMeta')->create({
         version=>$data{version},
         expires=>$data{expiration},
@@ -209,14 +209,14 @@ sub _import_meta {
 
   my $sqlite_file = Business::DPD::DBIC->path_to_sqlite;
 
-Returns the absolute path to the SQLite DB. You most likely won't need 
+Returns the absolute path to the SQLite DB. You most likely won't need
 this...
 
 =cut
 
 sub path_to_sqlite {
     if ($INC{'Test/More.pm'}) {
-        return 't/dpd_test.sqlite'; 
+        return 't/dpd_test.sqlite';
     }
     else {
         my $base = $INC{'Business/DPD/DBIC.pm'};
@@ -229,7 +229,7 @@ sub path_to_sqlite {
 
   Business::DPD::DBIC->generate_sqlite;
 
-Generates a new sqlite DB and fills it with the data included in this 
+Generates a new sqlite DB and fills it with the data included in this
 dist.
 
 Dies if a DB already exists.
@@ -255,8 +255,8 @@ sub generate_sqlite {
 
     my $list_of_create_statements = Business::DPD::DBIC->create_table_statements;
 
-Returns an ARRAYREF consisting of plain text sql statements to create 
-the database. If you want to embed the DB, you might want to munge the 
+Returns an ARRAYREF consisting of plain text SQL statements to create
+the database. If you want to embed the DB, you might want to munge the
 values to fit your database.
 
 =cut
