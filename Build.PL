@@ -10,7 +10,7 @@ my $builder = Module::Build->new(
     dist_version_from => 'lib/Business/DPD.pm',
     build_requires    => {
         'Test::More'       => '0',
-        'Test::Most'       => '0',
+        'Test::Most'       => '0.02',
         'Test::NoWarnings' => '0.084',
         'Test::Exception'  => '0.27',
     },
@@ -30,7 +30,7 @@ my $builder = Module::Build->new(
         'HTML::Entities'        => 0,
         'DateTime::Format::Strptime' => 0,
     },
-    
+
     add_to_cleanup     => ['Business-DPD-*'],
     create_makefile_pl => 'passthrough',
     recursive_test_files => 1,
