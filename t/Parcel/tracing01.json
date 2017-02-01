@@ -1,0 +1,188 @@
+({
+	"TrackingStatusJSON":	{
+		"shipmentInfo":	{
+			"parcelNumber":	"06505024408942",
+			"checkSum":	"K",
+			"podUrl":	"//tracking.dpd.de/cgi-bin/delistrack.acl?typ=7&lang=en&pknr=06505024408942&var=0516|2811|7000022|2016|998|E||",
+			"receiver":	"",
+			"receiverPostCode":	"",
+			"destinationCountry":	"NL",
+			"product":	"DPD CLASSIC",
+			"deliveryStatusMessage":	"Your parcel was delivered on 28/11/2016, at 11:15 ",
+			"deliveryStatus":	5,
+			"deliveryStatusIcons":	[4, 5, 6, 9, 10],
+			"receiverAvailable":	1,
+			"codInformationAvailable":	0,
+			"receiverPostCodeMismatch":	0,
+			"isReturnToSender":	0,
+			"showFollowMyParcel":	0
+		},
+		"statusInfos":	[{
+				"parcelNumber":	"",
+				"date":	"22/11/2016",
+				"time":	"13:44 ",
+				"city":	"DPD data centre",
+				"depotNr":	"0998",
+				"showDepotContactInformation":	0,
+				"detailLevel":	0,
+				"contents":	[{
+						"detailLevel":	0,
+						"contentType":	"text",
+						"label":	"Order information has been transmitted to DPD."
+					}]
+			}, {
+				"parcelNumber":	"",
+				"date":	"22/11/2016",
+				"time":	"15:33 ",
+				"city":	"Bratislava (SK)",
+				"depotNr":	"0650",
+				"showDepotContactInformation":	0,
+				"detailLevel":	0,
+				"contents":	[{
+						"detailLevel":	0,
+						"contentType":	"text",
+						"label":	"Received by DPD from consignor."
+					}]
+			}, {
+				"parcelNumber":	"",
+				"date":	"22/11/2016",
+				"time":	"17:59 ",
+				"city":	"Bratislava (SK)",
+				"depotNr":	"0650",
+				"showDepotContactInformation":	1,
+				"detailLevel":	0,
+				"contents":	[{
+						"detailLevel":	0,
+						"contentType":	"text",
+						"label":	"In transit."
+					}]
+			}, {
+				"parcelNumber":	"",
+				"date":	"23/11/2016",
+				"time":	"14:06 ",
+				"city":	"Kesselsdorf (DE)",
+				"depotNr":	"0101",
+				"showDepotContactInformation":	0,
+				"detailLevel":	1,
+				"contents":	[{
+						"detailLevel":	0,
+						"contentType":	"text",
+						"label":	"In transit."
+					}]
+			}, {
+				"parcelNumber":	"",
+				"date":	"24/11/2016",
+				"time":	"02:26 ",
+				"city":	"Unna (DE)",
+				"depotNr":	"0015",
+				"showDepotContactInformation":	0,
+				"detailLevel":	1,
+				"contents":	[{
+						"detailLevel":	0,
+						"contentType":	"text",
+						"label":	"In transit."
+					}, {
+						"detailLevel":	0,
+						"contentType":	"text",
+						"label":	"Preload."
+					}]
+			}, {
+				"parcelNumber":	"",
+				"date":	"25/11/2016",
+				"time":	"07:56 ",
+				"city":	"AMSTERDAM (NL)",
+				"depotNr":	"0516",
+				"showDepotContactInformation":	0,
+				"detailLevel":	0,
+				"contents":	[{
+						"detailLevel":	0,
+						"contentType":	"text",
+						"label":	"At parcel delivery centre."
+					}]
+			}, {
+				"parcelNumber":	"",
+				"date":	"25/11/2016",
+				"time":	"09:05 ",
+				"city":	"AMSTERDAM (NL)",
+				"depotNr":	"0516",
+				"showDepotContactInformation":	0,
+				"detailLevel":	0,
+				"contents":	[{
+						"detailLevel":	0,
+						"contentType":	"text",
+						"label":	"Out for delivery."
+					}]
+			}, {
+				"parcelNumber":	"",
+				"date":	"25/11/2016",
+				"time":	"12:04 ",
+				"city":	"AMSTERDAM (NL)",
+				"depotNr":	"0516",
+				"showDepotContactInformation":	0,
+				"detailLevel":	0,
+				"contents":	[{
+						"detailLevel":	0,
+						"contentType":	"text",
+						"label":	"Unfortunately we have not been able to deliver your parcel."
+					}, {
+						"detailLevel":	0,
+						"contentType":	"text",
+						"label":	"Parcelshop delivery after 1st delivery attempt"
+					}]
+			}, {
+				"parcelNumber":	"",
+				"date":	"25/11/2016",
+				"time":	"12:04 ",
+				"city":	"DPD data centre",
+				"depotNr":	"0998",
+				"showDepotContactInformation":	0,
+				"detailLevel":	0,
+				"contents":	[{
+						"detailLevel":	0,
+						"contentType":	"text",
+						"label":	"Redirected to the following Pickup parcelshop:"
+					}, {
+						"detailLevel":	0,
+						"contentType":	"modal",
+						"content":	"<div class=\"parcel-shop-details\">    <div class=\"modal-head\">        <span>Details of your Pickup parcelshop</span>    </div>    <div class=\"modal-inner\">            <div class=\"company-name\">ETOS WIND</div>        <div class=\"address-contact\">            <div class=\"address\">VAN WOUSTRAAT 81<br />1074AD&nbsp;Amsterdam (NL)</div>            <div class=\"contact\"><table><tbody></table></tbody></div>            <hr>            <div class=\"mail\"></div>        </div>        <div class=\"opening-hours\">            <span>Opening hours</span>            <table><tbody><tr><td >Mo.:</td><td>09:00-12:00&nbsp;</td><td>12:00-18:00&nbsp;</td></tr><tr><td >Tu.:</td><td>09:00-12:00&nbsp;</td><td>12:00-18:00&nbsp;</td></tr><tr class=\"current\"><td >We.</td><td>09:00-12:00&nbsp;</td><td>12:00-18:00&nbsp;</td></tr><tr><td >Th.:</td><td>09:00-12:00&nbsp;</td><td>12:00-18:00&nbsp;</td></tr><tr><td >Fr.:</td><td>09:00-12:00&nbsp;</td><td>12:00-18:00&nbsp;</td></tr><tr><td >Sa.:</td><td>09:00-12:00&nbsp;</td><td>12:00-17:30&nbsp;</td></tr><tr><td >Su.:</td><td colspan=\"2\">closed</td></tr></tbody></table>        </div>    </div></div>",
+						"label":	"ETOS WIND"
+					}]
+			}, {
+				"parcelNumber":	"",
+				"date":	"25/11/2016",
+				"time":	"13:06 ",
+				"city":	"AMSTERDAM (NL)",
+				"depotNr":	"0516",
+				"showDepotContactInformation":	0,
+				"detailLevel":	0,
+				"contents":	[{
+						"detailLevel":	0,
+						"contentType":	"text",
+						"label":	"Delivered by driver to Pickup parcelshop."
+					}, {
+						"detailLevel":	0,
+						"contentType":	"link",
+						"url":	"//tracking.dpd.de/cgi-bin/delistrack.acl?typ=7&lang=en&pknr=06505024408942&var=0516|2511|6733790|2016|998|E||",
+						"label":	"evidence"
+					}, {
+						"detailLevel":	0,
+						"contentType":	"modal",
+						"content":	"<div class=\"parcel-shop-details\">    <div class=\"modal-head\">        <span>Details of your Pickup parcelshop</span>    </div>    <div class=\"modal-inner\">            <div class=\"company-name\">ETOS WIND</div>        <div class=\"address-contact\">            <div class=\"address\">VAN WOUSTRAAT 81<br />1074AD&nbsp;Amsterdam (NL)</div>            <div class=\"contact\"><table><tbody></table></tbody></div>            <hr>            <div class=\"mail\"></div>        </div>        <div class=\"opening-hours\">            <span>Opening hours</span>            <table><tbody><tr><td >Mo.:</td><td>09:00-12:00&nbsp;</td><td>12:00-18:00&nbsp;</td></tr><tr><td >Tu.:</td><td>09:00-12:00&nbsp;</td><td>12:00-18:00&nbsp;</td></tr><tr class=\"current\"><td >We.</td><td>09:00-12:00&nbsp;</td><td>12:00-18:00&nbsp;</td></tr><tr><td >Th.:</td><td>09:00-12:00&nbsp;</td><td>12:00-18:00&nbsp;</td></tr><tr><td >Fr.:</td><td>09:00-12:00&nbsp;</td><td>12:00-18:00&nbsp;</td></tr><tr><td >Sa.:</td><td>09:00-12:00&nbsp;</td><td>12:00-17:30&nbsp;</td></tr><tr><td >Su.:</td><td colspan=\"2\">closed</td></tr></tbody></table>        </div>    </div></div>",
+						"label":	"ETOS WIND"
+					}]
+			}, {
+				"parcelNumber":	"",
+				"date":	"28/11/2016",
+				"time":	"11:15 ",
+				"city":	"AMSTERDAM (NL)",
+				"depotNr":	"0516",
+				"showDepotContactInformation":	0,
+				"detailLevel":	0,
+				"contents":	[{
+						"detailLevel":	0,
+						"contentType":	"text",
+						"label":	"Collected by consignee from Pickup parcelshop."
+					}]
+			}]
+	}
+})

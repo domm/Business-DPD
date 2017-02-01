@@ -1,6 +1,6 @@
 Revision history for Perl extension Business::DPD
 
-0.22   2013-XX-XX
+0.22  2017-XX-XX
     - using TTF-File again because utf8 characters don't work the other way
       closing file descriptors that remains open due to bug in PDF::Reuse
       (http://rt.cpan.org/Ticket/Display.html?id=41287)
@@ -11,13 +11,15 @@ Revision history for Perl extension Business::DPD
     - country_code number is now zero padded 3 characters long
       fixing labels to AD AF AG AL AM AO AQ AR AS AT AU AZ BA BB BD BE
                        BH BM BN BO BR BS BT BV BW BZ DZ IO SB VG
+    - re-write Business::DPD::Parcel to use json interface instead
+      of screen scraping the html delivery status page
 
 0.21   2009-02-13 12:10:26
     - Improve rendering to stick closer to official UPS-Label spec
     - Smaller pdf template filesize
 
 0.20   2009-02-13 12:10:26
-    - potential fix for wrong route calculation if the ROUTE.db 
+    - potential fix for wrong route calculation if the ROUTE.db
       defines service codes (see DE zip 70734)
 
 
@@ -47,9 +49,9 @@ Revision history for Perl extension Business::DPD
 
 
 0.14   2008-10-27 15:10:33
-    - fix problem with postcodes that are included in other postcodes 
-      (eg DE-51643) - thanks to maros for spotting this 
-    - fix end_postcode in embedded sqlite DB 
+    - fix problem with postcodes that are included in other postcodes
+      (eg DE-51643) - thanks to maros for spotting this
+    - fix end_postcode in embedded sqlite DB
 
 
 0.13   2008-10-26 20:27:45
@@ -62,14 +64,14 @@ Revision history for Perl extension Business::DPD
 0.12   2008-10-25 16:00:13
     - use plain barcode for filename
     - do not autogenerate city line for recipient
-    - import: set end_postcode to begin_postcode if its not defined 
-    - added missing dependency on DBIx::Class (thanks to cpan testers 
+    - import: set end_postcode to begin_postcode if its not defined
+    - added missing dependency on DBIx::Class (thanks to cpan testers
       again..)
     - more tests
 
 
 0.11   2008-10-23 10:40:55
-    - added deps to Build.PL (thanks to CPAN testers for the hints, 
+    - added deps to Build.PL (thanks to CPAN testers for the hints,
       but I blame spinne because she pressed me into a hastly release on #Austria.pm
 
 
