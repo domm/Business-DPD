@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use utf8;
 
-use Test::Most;
+use Test::Most 0.02;
 
 use Path::Class qw(file);
 use FindBin '$Bin';
@@ -32,12 +32,13 @@ if ($ENV{DO_LIVE_TEST}) {
 	}
 }'
     );
-    is($dpd_parcel->exists,           0,     'parcel does not exist');
+    warning_like { $dpd_parcel->dpd_tracking_data } qr/failed to fetch/, 'warning given for failed request';
+    is ($dpd_parcel->exists,           0,     'parcel does not exist');
     is($dpd_parcel->pick_up_datetime, undef, 'pick_up_datetime()');
     is($dpd_parcel->delivery_datetime, undef, 'delivery_datetime()');
     is($dpd_parcel->current_country,          undef, 'country()');
     is($dpd_parcel->current_city,             undef, 'city()');
-    dies_ok {dpd_parcel->zip} 'zip no longer available';
+    dies_ok {$dpd_parcel->zip} 'zip no longer available';
 }
 
 {
