@@ -55,7 +55,7 @@ Business::DPD::Label - one DPD label
         country         => 'DE',
         depot           => '1090',
         serial          => '50123456%0878',
-        service_code    => '101',    
+        service_code    => '101',
         weight          => '6 kg',
     });
     $label->calc_fields;
@@ -82,7 +82,7 @@ Business::DPD::Label - one DPD label
 
 =head1 DESCRIPTION
 
-Calculate the data that's needed for a valid addresse label.
+Calculate the data that's needed for a valid address label.
 
 =head1 METHODS
 
@@ -100,7 +100,7 @@ Calculate the data that's needed for a valid addresse label.
         service_code    => '101',
     });
 
-TODO?: take a Business::DPD::Address as an agrument (instead of zip & country)
+TODO?: take a Business::DPD::Address as an argument (instead of zip & country)
 
 =cut
 
@@ -139,7 +139,7 @@ sub new {
 
     $label->calc_fields;
 
-Calculate all caluclatable fields from the provided data using the DPD database from C<$schema>:
+Calculate all fields that can be calculated from the provided data using the DPD database from C<$schema>:
 
   target_country
 
@@ -159,7 +159,7 @@ sub calc_fields {
 
     $label->calc_tracking_number;
 
-Calulates the tracking number and stores it in C<tracking_number>. C<tracking_number> consists of 
+Calculates the tracking number and stores it in C<tracking_number>. C<tracking_number> consists of
 
    DDDDXXLLLLLLLLP
       | |     |  |
@@ -181,7 +181,7 @@ sub calc_tracking_number {
     $self->tracking_number($base . $checksum);
     $self->tracking_number_without_checksum($base);
 }
-    
+
 =head3 calc_routing
 
     $label->calc_routing;
@@ -190,7 +190,7 @@ sub calc_tracking_number {
 Calculates the following fields:
 
   o_sort d_sort d_depot barcode_id
-  
+
 =cut
 
 sub calc_routing {
@@ -216,7 +216,7 @@ sub calc_routing {
     }
 
     croak "No route found!" if $route_rs->count == 0;
-    
+
     my $route=$route_rs->first;
 
     $self->o_sort($route->o_sort);
@@ -253,14 +253,14 @@ Returns the service text for the given service code
 
 sub service_text {
     my ($self, $code) = @_;
-    
+
     $code //= $self->service_code;
     return $SERVICE_TEXT{$code}
         if defined $SERVICE_TEXT{$code};
-    
-    return;  
+
+    return;
 }
-    
+
 
 
 
@@ -272,7 +272,7 @@ Generate the various parts of the barcode, which are:
 
 =over
 
-=item * code 
+=item * code
 
 PPPPPPPTTTTTTTTTTTTTTSSSCCC
 
@@ -295,7 +295,7 @@ And here's the explanation of those strange letter:
     |   |          |       +------> service_code                      101
     |   |          +--------------> tracking_number_without_checksum  01905002345615
     |   +-------------------------> zip (zero padded)                 0012555
-    +-----------------------------> barcode_id                        %                   
+    +-----------------------------> barcode_id                        %
 
 =cut
 
@@ -320,31 +320,31 @@ sub _zip_for_calc {
 
 =head1 TODO
 
-* weiters:
+    * weiters:
 
-kennzeichnung (kleingewicht, Express)
-Servicetext
-Servicecode
+    kennzeichnung (kleingewicht, Express)
+    Servicetext
+    Servicecode
 
 =cut
 
 =head1 needed methods
 
-* one object for one address
-* required fields
-** target country
-** target zipcode
-** laufende nummer
-** depot number
-** service code
-* semi-required
-** address data
-* optional
-** referenznummer
-** auftragsnummer
-** gewicht
-** n of m
-** template
+    * one object for one address
+    * required fields
+    ** target country
+    ** target zipcode
+    ** laufende nummer
+    ** depot number
+    ** service code
+    * semi-required
+    ** address data
+    * optional
+    ** referenznummer
+    ** auftragsnummer
+    ** gewicht
+    ** n of m
+    ** template
 
 =cut
 
